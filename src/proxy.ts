@@ -6,7 +6,7 @@ export async function proxy(req: NextRequest) {
   if (req.nextUrl.pathname.includes("/cart")) {
     if (!token) {
       return NextResponse.redirect(
-        `${process.env.NEXTAUTH_URL_INTERNAL}/signin`,
+        new URL("/signin", req.url)
       );
     } else {
       return NextResponse.next();
@@ -17,7 +17,7 @@ export async function proxy(req: NextRequest) {
     req.nextUrl.pathname.includes("/signup")
   ) {
     if (token) {
-      return NextResponse.redirect(`${process.env.NEXTAUTH_URL_INTERNAL}/`);
+      return NextResponse.redirect(new URL("/", req.url));
     } else {
       return NextResponse.next();
     }

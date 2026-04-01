@@ -2,7 +2,6 @@ import Features from "@/components/Features/Features";
 import PageDescription from "@/components/PageDescription/PageDescription";
 import ProductCard from "@/components/productCard/ProductCard";
 import { getAllProducts } from "@/services/getAllProducts/getAllProducts";
-import React from "react";
 import { FaBoxOpen } from "react-icons/fa";
 
 export default async function Products() {
