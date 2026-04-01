@@ -1,13 +1,21 @@
+import Features from "@/components/Features/Features";
+import PageDescription from "@/components/PageDescription/PageDescription";
 import ProductCard from "@/components/productCard/ProductCard";
 import { getAllProducts } from "@/services/getAllProducts/getAllProducts";
 import React from "react";
+import { FaBoxOpen } from "react-icons/fa";
 
 export default async function Products() {
   const allProducts = await getAllProducts();
 
   return (
     <>
-      <section className="py-12">
+        <PageDescription
+          icon={<FaBoxOpen />}
+          page={"All Products"}
+          description={"Explore our complete product collection"}
+        />
+      <section className="py-10">
         <div className="container px-4">
           <h2 className="text-2xl font-bold text-gray-800 mb-8 px-2">
             Recent Products
@@ -19,6 +27,7 @@ export default async function Products() {
           </div>
         </div>
       </section>
+      <Features/>
     </>
   );
 }

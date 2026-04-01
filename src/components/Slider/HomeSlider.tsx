@@ -11,7 +11,7 @@ import "swiper/css/navigation";
 
 import sliderImage from "../../../public/assets/home-slider-1.d79601a8.png";
 
-// مصفوفة البيانات عشان الكود يكون أنظف وأسهل في التعديل
+
 const slidesData = [
   {
     title: "Fresh Products Delivered to your Door",
@@ -42,17 +42,25 @@ const slidesData = [
   },
 ];
 
-export default function Myslider() {
+export default function Homeslider() {
   return (
-    <div className="relative group w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
+    <div className="relative group w-full h-[400px] md:h-[500px]  overflow-hidden shadow-xl">
       <Swiper
         modules={[Autoplay, Pagination, Navigation]}
         className="w-full h-full [&_.swiper-pagination-bullet]:bg-white [&_.swiper-pagination-bullet-active]:w-10 [&_.swiper-pagination-bullet-active]:rounded-full [&_.swiper-pagination-bullet-active]:transition-all [&_.swiper-pagination-bullet-active]:bg-white"
         spaceBetween={0}
         slidesPerView={1}
         loop={true}
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
-        pagination={{ clickable: true }}
+        autoplay={{ delay: 6000, disableOnInteraction: false }}
+        pagination={{
+          clickable: true,
+          renderBullet: function (index, className) {
+            return `<span class="${className}"></span>`;
+          },
+          bulletActiveClass: "!bg-white !opacity-100 text-white shadow-lg",
+          bulletClass:
+            "swiper-pagination-bullet !w-4 !h-4 !inline-flex items-center justify-center border transition-all duration-300",
+        }}
         navigation={{
           prevEl: ".custom-prev",
           nextEl: ".custom-next",
@@ -70,7 +78,7 @@ export default function Myslider() {
             />
 
             {/* الـ Overlay والنصوص */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-600/80  to-primary-600/25 flex items-center px-8 md:px-20 z-10">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-600/80  to-primary-600/25 flex items-center px-6 md:px-20 z-10">
               <div className="container h-full flex flex-col justify-center">
                 <h2 className="text-white text-4xl md:text-5xl font-bold mb-4 max-w-lg leading-tight">
                   {slide.title}

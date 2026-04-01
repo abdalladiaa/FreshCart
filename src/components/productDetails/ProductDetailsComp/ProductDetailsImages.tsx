@@ -20,7 +20,7 @@ export default function ProductDetailsImages({
               className="w-full h-auto object-contain aspect-square hover:scale-110 transition-transform duration-500"
             />
           </div>
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+          <div className="flex justify-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {product.data.images?.map((img: string, i: number) => (
               <img
                 onClick={() => setImage(img)}

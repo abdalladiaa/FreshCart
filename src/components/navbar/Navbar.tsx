@@ -1,11 +1,21 @@
 "use client";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
-import { FaRegUserCircle } from "react-icons/fa";
+import React, { useState } from "react";
+import {
+  FaEnvelope,
+  FaGift,
+  FaPhone,
+  FaRegUser,
+  FaRegUserCircle,
+  FaTruck,
+  FaUser,
+  FaUserPlus,
+} from "react-icons/fa";
 import { FaCartShopping, FaRegHeart } from "react-icons/fa6";
 import { FiX } from "react-icons/fi";
-import { IoIosSearch } from "react-icons/io";
+import { ImExit } from "react-icons/im";
 import { IoSearch } from "react-icons/io5";
 import { LuUserRound } from "react-icons/lu";
 import { TiThMenu } from "react-icons/ti";
@@ -148,9 +158,107 @@ export default function Navbar() {
 
   const path = usePathname();
 
+  const { data, status } = useSession();
+
+  console.log(data, "data");
+
+  function handleSignout() {
+    signOut({ callbackUrl: "/signin" });
+    setMenu(false);
+  }
+
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white shadow-sm">
+      <div className="hidden lg:block text-sm border-b border-gray-100 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center h-11">
+            {/* Left Side: Info Badges */}
+            <div className="flex items-center gap-8 text-gray-500 font-medium">
+              <span className="flex items-center gap-2 group cursor-default">
+                <FaTruck
+                  className="text-emerald-600 group-hover:animate-bounce transition-all"
+                  size={14}
+                />
+                <span className="group-hover:text-gray-700 transition-colors">
+                  Free Shipping on Orders 500 EGP
+                </span>
+              </span>
+              <span className="flex items-center gap-2 group cursor-default">
+                <FaGift
+                  className="text-emerald-600 group-hover:scale-110 transition-transform"
+                  size={14}
+                />
+                <span className="group-hover:text-gray-700 transition-colors">
+                  New Arrivals Daily
+                </span>
+              </span>
+            </div>
+
+            {/* Right Side: Contact & Auth */}
+            <div className="flex items-center gap-6">
+              {/* Contact Links */}
+              <div className="flex items-center gap-5 text-gray-500 border-r border-gray-200 pr-6">
+                <a
+                  href="tel:+18001234567"
+                  className="flex items-center gap-2 hover:text-emerald-600 transition-colors"
+                >
+                  <FaPhone size={12} />
+                  <span>+1 (800) 123-4567</span>
+                </a>
+                <a
+                  href="mailto:support@freshcart.com"
+                  className="flex items-center gap-2 hover:text-emerald-600 transition-colors"
+                >
+                  <FaEnvelope size={13} />
+                  <span>support@freshcart.com</span>
+                </a>
+              </div>
+
+              {/* Auth Links */}
+              <div className="flex items-center gap-4">
+                {status === "unauthenticated" ? (
+                  <div className="flex items-center gap-5">
+                    <Link
+                      href="/signin"
+                      className="flex items-center gap-2 text-gray-600 hover:text-emerald-600 font-semibold transition-all hover:-translate-y-0.5"
+                    >
+                      <FaRegUser size={13} />
+                      <span>Sign In</span>
+                    </Link>
+                    <Link
+                      href="/signup"
+                      className="flex items-center gap-2 text-gray-600 hover:text-emerald-600 font-semibold transition-all hover:-translate-y-0.5"
+                    >
+                      <FaRegUser size={13} />
+                      <span>Sign Up</span>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-4">
+                    {/* User Profile Info */}
+                    <Link href={"/profile"} className="flex items-center gap-2 px-3 py-1 text-gray-600 hover:text-primary-600">
+                      <FaUser />
+                      <span className="font-medium">{data?.user?.name}</span>
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        handleSignout();
+                      }}
+                      className="text-gray-600 flex items-center font-bold gap-2 hover:text-red-600 transition-colors cursor-pointer text-xs uppercase tracking-wider"
+                    >
+                      <ImExit size={20} />
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <header className="sticky top-0 z-50 bg-white shadow-sm">
         <div className="bg-white">
           <div className="container px-4">
             <div className="flex items-center justify-between h-16 lg:h-[72px] gap-4 lg:gap-8">
@@ -227,15 +335,18 @@ export default function Navbar() {
                   />
                 </Link>
                 <div className="relative">
-                  <button
-                    onClick={() => setInfoMenu(!infoMenu)}
-                    className="  rounded-full hidden lg:flex  cursor-pointer group relative p-2.5 text-gray-600 hover:bg-gray-100"
-                  >
-                    <FaRegUserCircle
-                      className="group-hover:text-primary-600"
-                      size={"23"}
-                    />
-                  </button>
+                  {status === "authenticated" && (
+                    <button
+                      onClick={() => setInfoMenu(!infoMenu)}
+                      className="  rounded-full hidden lg:flex  cursor-pointer group relative p-2.5 text-gray-600 hover:bg-gray-100"
+                    >
+                      <FaRegUserCircle
+                        className="group-hover:text-primary-600"
+                        size={"23"}
+                      />
+                    </button>
+                  )}
+
                   <div
                     className={` ${infoMenu ? "" : "hidden"} absolute right-0 top-full mt-2 w-64 bg-white border border-gray-100 rounded-2xl shadow-xl transition-all duration-200 origin-top-right opacity-100 scale-100 visible`}
                   >
@@ -258,7 +369,7 @@ export default function Navbar() {
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-gray-800 truncate">
-                            abdalla diaa
+                            {data?.user?.name}
                           </p>
                           <p className="text-xs text-gray-400 truncate" />
                         </div>
@@ -364,13 +475,16 @@ export default function Navbar() {
                     <div className="border-t border-gray-100 py-2"></div>
                   </div>
                 </div>
-                <Link
-                  href="/signin"
-                  className="hidden lg:flex items-center gap-2 ml-2 px-6 py-2.5 rounded-full bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-all hover:shadow-lg hover:shadow-primary-600/30 active:scale-95 group"
-                >
-                  <LuUserRound />
-                  <span>Sign In</span>
-                </Link>
+                {status === "unauthenticated" && (
+                  <Link
+                    href="/signin"
+                    className="hidden lg:flex items-center gap-2 ml-2 px-6 py-2.5 rounded-full bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-all hover:shadow-lg hover:shadow-primary-600/30 active:scale-95 group"
+                  >
+                    <LuUserRound />
+                    <span>Sign In</span>
+                  </Link>
+                )}
+
                 <button
                   onClick={() => setMenu(!menu)}
                   className="lg:hidden ml-1 w-10 h-10 rounded-full bg-primary-600 hover:bg-primary-700 text-white flex items-center justify-center transition-colors"
@@ -446,17 +560,28 @@ export default function Navbar() {
                 </Link>
               ))}
             </nav>
-
-            <div className="mt-auto pt-6 border-t border-gray-100">
-              <Link
-                href="/signin"
-                onClick={() => setMenu(false)}
-                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full bg-primary-600 text-white font-bold shadow-md active:scale-95 transition-transform"
-              >
-                <LuUserRound size={20} />
-                Sign In
-              </Link>
-            </div>
+            {status == "unauthenticated" ? (
+              <div className="mt-auto pt-6 border-t border-gray-100">
+                <Link
+                  href="/signin"
+                  onClick={() => setMenu(false)}
+                  className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full bg-primary-600 text-white font-bold shadow-md active:scale-95 transition-transform"
+                >
+                  <LuUserRound size={20} />
+                  Sign In
+                </Link>
+              </div>
+            ) : (
+              <div className="mt-auto pt-6 border-t border-gray-100">
+                <button
+                  onClick={() => handleSignout()}
+                  className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full bg-red-600 text-white font-bold shadow-md active:scale-95 transition-transform"
+                >
+                  <ImExit size={20} />
+                  Sign Out
+                </button>
+              </div>
+            )}
           </div>
         </aside>
       </div>
