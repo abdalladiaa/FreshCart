@@ -21,7 +21,7 @@ export default async function Products() {
             Recent Products
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {allProducts.data.map((product) => (
+            {allProducts?.data?.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
           </div>
