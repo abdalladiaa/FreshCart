@@ -8,7 +8,8 @@ export async function addToCart(productId: string) {
   console.log(token, "UserToken");
 
   if (!token) {
-    throw new Error("unAuth");
+    // Not authenticated — signal failure to caller instead of throwing
+    return false;
   }
 
   try {

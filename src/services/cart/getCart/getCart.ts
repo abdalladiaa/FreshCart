@@ -6,7 +6,23 @@ import { getDecodedTokenFunc } from "@/utils/getDecodedTokenFunc";
 export async function getCart() {
   const token = await getDecodedTokenFunc();
   if (!token) {
-    throw new Error("unAuth");
+    // If user is not authenticated, return an empty cart structure instead of throwing
+    const emptyCart = {
+      _id: "",
+      cartOwner: "",
+      products: [],
+      createdAt: "",
+      updatedAt: "",
+      __v: 0,
+      totalCartPrice: 0,
+    };
+    return {
+      status: "success",
+      message: "no cart",
+      numOfCartItems: 0,
+      cartId: "",
+      data: emptyCart,
+    };
   }
   try {
     const respons = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_V2}/cart`, {

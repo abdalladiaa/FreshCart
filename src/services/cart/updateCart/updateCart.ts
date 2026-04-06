@@ -7,7 +7,22 @@ import { revalidatePath } from "next/cache";
 export async function updateCart(productId: string, count: number) {
   const token = await getDecodedTokenFunc();
   if (!token) {
-    throw new Error("unAuth");
+    // Not authenticated — return a failure-shaped response instead of throwing
+    return {
+      status: "fail",
+      message: "unAuth",
+      numOfCartItems: 0,
+      cartId: "",
+      data: {
+        _id: "",
+        cartOwner: "",
+        products: [],
+        createdAt: "",
+        updatedAt: "",
+        __v: 0,
+        totalCartPrice: 0,
+      },
+    } as unknown as CartResponse;
   }
   try {
     const respons = await fetch(

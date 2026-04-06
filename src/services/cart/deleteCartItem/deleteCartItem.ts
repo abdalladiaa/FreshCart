@@ -7,7 +7,21 @@ import { revalidatePath } from "next/cache";
 export async function deleteCartItem(productId: string) {
   const token = await getDecodedTokenFunc();
   if (!token) {
-    throw new Error("unAuth");
+    return {
+      status: "fail",
+      message: "unAuth",
+      numOfCartItems: 0,
+      cartId: "",
+      data: {
+        _id: "",
+        cartOwner: "",
+        products: [],
+        createdAt: "",
+        updatedAt: "",
+        __v: 0,
+        totalCartPrice: 0,
+      },
+    } as unknown as CartResponse;
   }
   try {
     const respons = await fetch(
