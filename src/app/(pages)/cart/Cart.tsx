@@ -15,7 +15,7 @@ export default async function Cart() {
       <div className="min-h-[60vh] flex items-center justify-center px-4">
         <div className="max-w-md text-center">
           <div className="relative mb-8">
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center mx-auto">
+            <div className="w-32 h-32 rounded-full bg-linear-to-br from-gray-100 to-gray-50 flex items-center justify-center mx-auto">
               <svg
                 className="w-16 h-16 text-gray-300"
                 fill="currentColor"
@@ -36,7 +36,7 @@ export default async function Cart() {
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white py-3.5 px-8 rounded-xl font-semibold hover:from-primary-700 hover:to-primary-800 transition-all shadow-lg shadow-primary-600/20 active:scale-[0.98]"
+            className="inline-flex items-center gap-2 bg-linear-to-r from-primary-600 to-primary-700 text-white py-3.5 px-8 rounded-xl font-semibold hover:from-primary-700 hover:to-primary-800 transition-all shadow-lg shadow-primary-600/20 active:scale-[0.98]"
           >
             <span>Start Shopping</span>
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 512 512">
@@ -66,7 +66,7 @@ export default async function Cart() {
       <div className="mb-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-200 pb-8">
           <div className="flex items-center gap-4">
-            <div className="bg-gradient-to-r from-primary-600 to-primary-700 text-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shadow-primary-600/20">
+            <div className="bg-linear-to-r from-primary-600 to-primary-700 text-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shadow-primary-600/20">
               <FaShoppingCart size={24} />
             </div>
             <div>
