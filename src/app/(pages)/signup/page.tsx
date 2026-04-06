@@ -31,8 +31,7 @@ export default function Signup() {
   });
 
   async function handleSignup(values: SignupSchemaType) {
-    console.log(values);
-
+    
     try {
       setLoading(true);
       const response = await fetch(
@@ -63,7 +62,7 @@ export default function Signup() {
         toast.error(data.message);
       }
     } catch (err) {
-      console.log(err);
+      // error handling
     } finally {
       setLoading(false);
     }
@@ -83,7 +82,7 @@ export default function Signup() {
   const passwordValue = form.watch("password", "");
   const strength = calculateStrength(passwordValue);
 
-  console.log(strength);
+  
 
   const getBarColor = (s: number) => {
     if (s <= 40) return "bg-red-500";

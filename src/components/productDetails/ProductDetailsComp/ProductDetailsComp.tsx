@@ -2,8 +2,6 @@ import { ProductDetails } from "@/interfaces/productDetails.interface";
 import React from "react";
 import {
   FaBolt,
-  FaMinus,
-  FaPlus,
   FaRegHeart,
   FaShippingFast,
   FaShoppingCart,
@@ -13,12 +11,25 @@ import { FaArrowRotateLeft } from "react-icons/fa6";
 import { RiSecurePaymentLine } from "react-icons/ri";
 import ProductDetailsImages from "./ProductDetailsImages";
 import QuantityCounter from "../QuantityCounter/QuantityCounter";
+import AddToCartBtn from "@/components/AddToCartBtn/AddToCartBtn";
+import ProductDetailsProcesses from "../ProductDetailsProcesses/ProductDetailsProcesses";
 
 export default function ProductDetailsComp({
   product,
 }: {
   product: ProductDetails;
 }) {
+  if (!product || !product.data) {
+    return (
+      <section id="product-detail" className="my-10">
+        <div className="container mx-auto p-4">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
+            <p className="text-gray-500">Product not found or unavailable.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
   return (
     <>
       <section id="product-detail" className="my-10">
@@ -29,16 +40,16 @@ export default function ProductDetailsComp({
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
               <div className="flex items-center gap-3 mb-4">
                 <span className="bg-primary-50 text-primary-700 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
-                  {product.data.category.name}
+                  {product.data?.category?.name ?? "Uncategorized"}
                 </span>
                 <span className="text-gray-300">/</span>
                 <span className="text-gray-500 text-sm font-medium">
-                  {product.data.brand.name}
+                  {product.data?.brand?.name ?? "Unknown Brand"}
                 </span>
               </div>
 
               <h1 className="text-3xl font-extrabold text-gray-900 mb-4">
-                {product.data.title}
+                {product.data?.title ?? "Untitled Product"}
               </h1>
 
               <div className="flex items-center gap-6 mb-8">
@@ -46,7 +57,7 @@ export default function ProductDetailsComp({
                   <div className="flex text-yellow-400">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <span key={star}>
-                        {product.data.ratingsAverage >= star ? (
+                        {product.data?.ratingsAverage >= star ? (
                           <FaStar />
                         ) : (
                           <FaStar className="text-gray-300" />
@@ -55,41 +66,24 @@ export default function ProductDetailsComp({
                     ))}
                   </div>
                   <span className="text-sm text-gray-600">
-                    {product.data.ratingsAverage} (
-                    {product.data.ratingsQuantity} reviews)
+                    {product.data?.ratingsAverage ?? 0} (
+                    {product.data?.ratingsQuantity ?? 0} reviews)
                   </span>
                 </div>
               </div>
 
               <div className="mb-8">
                 <span className="text-4xl font-black text-gray-900">
-                  {product.data.price} EGP
+                  {product.data?.price ?? "-"} EGP
                 </span>
                 <p className="text-gray-600 mt-6 leading-relaxed text-lg italic">
-                  {product.data.description}
+                  {product.data?.description ?? "No description available."}
                 </p>
               </div>
 
-              <QuantityCounter product={product} />
+              <ProductDetailsProcesses product={product} />
 
-              <div className="flex flex-col sm:flex-row gap-4 mb-4">
-                <button className=" cursor-pointer flex-[3] bg-primary-600 text-white py-4 rounded-xl font-bold hover:bg-primary-700 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-lg shadow-primary-600/20">
-                  <FaShoppingCart />
-                  Add to Cart
-                </button>
 
-                <button className=" cursor-pointer flex-[2] bg-gray-900 text-white py-4 rounded-xl font-bold hover:bg-black active:scale-95 transition-all flex items-center justify-center gap-3">
-                  <FaBolt />
-                  Buy Now
-                </button>
-              </div>
-
-              <div className="mb-8">
-                <button className=" cursor-pointer w-full border-2 border-gray-100 text-gray-700 py-4 rounded-xl font-bold hover:border-primary-200 hover:text-primary-600 hover:bg-primary-50 transition-all flex items-center justify-center gap-2">
-                  <FaRegHeart />
-                  Add to Wishlist
-                </button>
-              </div>
 
               {/* Features Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 border-t border-gray-100">

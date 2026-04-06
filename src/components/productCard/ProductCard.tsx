@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaRegHeart, FaStar, FaEye } from "react-icons/fa";
 import { HiPlus } from "react-icons/hi";
+import AddToCartBtn from "../AddToCartBtn/AddToCartBtn";
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
@@ -88,12 +89,15 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Add to Cart Button (Back to Emerald) */}
-        <button className="mt-5 w-full bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl flex items-center justify-center gap-2.5 transition-all duration-300 shadow-lg shadow-emerald-100 hover:shadow-emerald-200 cursor-pointer active:scale-95">
+        <AddToCartBtn
+          id={product._id}
+          className="mt-5 w-full bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl flex items-center justify-center gap-2.5 transition-all duration-300 shadow-lg shadow-emerald-100 hover:shadow-emerald-200 cursor-pointer active:scale-95"
+        >
           <HiPlus className="text-xl  transition-transform duration-300" />
           <span className="text-sm font-bold uppercase tracking-wide">
             Add to Cart
           </span>
-        </button>
+        </AddToCartBtn>
       </div>
     </div>
   );

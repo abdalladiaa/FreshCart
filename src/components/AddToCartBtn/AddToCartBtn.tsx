@@ -1,13 +1,60 @@
-import React from "react";
-import { HiPlus } from "react-icons/hi";
+"use client";
+import { addToCart } from "@/services/cart/addToCart/addToCart";
+import React, { ReactNode, useState } from "react";
+import { toast } from "sonner";
+import { ImSpinner2 } from "react-icons/im";
+import { updateCart } from "@/services/cart/updateCart/updateCart";
 
-export default function AddToCartBtn() {
+interface AddToCartBtnProps {
+  children?: ReactNode;
+  className?: string;
+  id: string;
+  quantity?: number;
+}
+
+export default function AddToCartBtn({
+  children,
+  className,
+  id,
+  quantity = 0,
+}: AddToCartBtnProps) {
+  const [loading, setLoading] = useState(false);
+
+  async function handleAddToCart() {
+    try {
+      setLoading(true);
+      const result = await addToCart(id);
+      if (result) {
+        if (quantity) {
+          updateCart(id, quantity);
+        }
+        toast.success("Product added to cart successfully");
+      } else {
+        toast.error("Failed to add product to cart");
+      }
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <button className="mt-5 w-full bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl flex items-center justify-center gap-2.5 transition-all duration-300 shadow-lg shadow-emerald-100 hover:shadow-emerald-200 cursor-pointer active:scale-95">
-      <HiPlus className="text-xl  transition-transform duration-300" />
-      <span className="text-sm font-bold uppercase tracking-wide">
-        Add to Cart
-      </span>
+    <button
+      onClick={handleAddToCart}
+      disabled={loading}
+      className={`${className} ${loading ? "opacity-80 cursor-not-allowed" : ""}`}
+    >
+      {loading ? (
+        <>
+          <ImSpinner2 className="animate-spin text-xl" />
+          <span className="text-sm font-bold uppercase tracking-wide">
+            Adding...
+          </span>
+        </>
+      ) : (
+        children
+      )}
     </button>
   );
 }

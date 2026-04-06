@@ -51,7 +51,7 @@ export default function Signin() {
         toast.error(data?.error);
       }
     } catch (err) {
-      console.log(err);
+      // error handling
     } finally {
       setLoading(false);
     }

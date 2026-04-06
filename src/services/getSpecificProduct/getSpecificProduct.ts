@@ -1,5 +1,5 @@
 export async function getSpecificProduct(id:String){
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/products/${id}`,{
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/products/${id}`,{
         next:{
             revalidate:10
         }

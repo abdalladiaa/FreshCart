@@ -2,7 +2,7 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaAddressBook,
   FaBoxOpen,
@@ -165,12 +165,22 @@ export default function Navbar() {
 
   const { data, status } = useSession();
 
-  console.log(data, "data");
-
   function handleSignout() {
     signOut({ callbackUrl: "/signin" });
     setMenu(false);
   }
+
+  useEffect(() => {
+    if (menu) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [menu]);
 
   return (
     <>
@@ -455,11 +465,10 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Sidebar Navigation */}
       <div
         className={`fixed inset-0 z-50 lg:hidden ${menu ? "visible" : "invisible pointer-events-none"}`}
       >
-        {/* Backdrop - الخلفية المظلمة */}
+        {/* Backdrop */}
         <div
           className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${
             menu ? "opacity-100" : "opacity-0"
@@ -467,80 +476,198 @@ export default function Navbar() {
           onClick={() => setMenu(false)}
         />
 
-        {/* Sidebar Content - القائمة الجانبية */}
+        {/* Sidebar Content */}
         <aside
-          className={`absolute right-0 top-0 h-full w-[280px] bg-white shadow-2xl transition-transform duration-300 transform ${
+          className={`fixed top-0 right-0 z-50 h-full w-80 max-w-[85vw] bg-white shadow-2xl transition-transform duration-300 overflow-y-auto ${
             menu ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          <div className="p-6 flex flex-col h-full">
-            <div className="flex items-center justify-between mb-8">
-              <div className="w-32">{logo}</div>
-              <button
-                onClick={() => setMenu(false)}
-                className="text-gray-500 text-2xl p-2 hover:bg-gray-100 rounded-full transition-colors"
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gray-50/50">
+            <img
+              alt="FreshCart"
+              loading="lazy"
+              width="160"
+              height="31"
+              className="h-8 w-auto"
+              style={{ color: "transparent" }}
+              src="/_next/static/media/freshcart-logo.49f1b44d.svg" // اتأكد من المسار ده عندك
+            />
+            <button
+              onClick={() => setMenu(false)}
+              className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            >
+              <svg
+                className="w-4 h-4 text-gray-600"
+                fill="currentColor"
+                viewBox="0 0 384 512"
               >
-                <FiX />
+                <path d="M55.1 73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L147.2 256 9.9 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192.5 301.3 329.9 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.8 256 375.1 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192.5 210.7 55.1 73.4z" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Search Form */}
+          <form
+            className="p-4 border-b border-gray-100"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search products..."
+                className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-sm"
+              />
+              <button
+                type="submit"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary-600 text-white flex items-center justify-center"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 512 512"
+                >
+                  <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376C296.3 401.1 253.9 416 208 416 93.1 416 0 322.9 0 208S93.1 0 208 0 416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                </svg>
               </button>
             </div>
+          </form>
 
-            {/* Search in Mobile */}
-            <form className="mb-6">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500/20 text-sm"
-                />
-                <button className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary-600 text-white flex items-center justify-center">
-                  <IoSearch size={18} />
-                </button>
-              </div>
-            </form>
+          {/* Navigation */}
+          <nav className="p-4">
+            <div className="space-y-1">
+              <a
+                href="/"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+              >
+                Home
+              </a>
+              <a
+                href="/products"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+              >
+                Shop
+              </a>
+              <a
+                href="/categories"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+              >
+                Categories
+              </a>
+              <a
+                href="/brands"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+              >
+                Brands
+              </a>
+            </div>
+          </nav>
 
-            <nav className="flex flex-col gap-4">
-              {[
-                { name: "Home", href: "/" },
-                { name: "Shop", href: "/products" },
-                { name: "Categories", href: "/categories" },
-                { name: "Brands", href: "/brands" },
-                { name: "Contact", href: "/contact" },
-              ].map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setMenu(false)}
-                  className={`text-lg font-semibold py-2 transition-colors ${
-                    path === link.href ? "text-primary-600" : "text-gray-700"
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </nav>
-            {status == "unauthenticated" ? (
-              <div className="mt-auto pt-6 border-t border-gray-100">
-                <Link
-                  href="/signin"
-                  onClick={() => setMenu(false)}
-                  className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full bg-primary-600 text-white font-bold shadow-md active:scale-95 transition-transform"
-                >
-                  <LuUserRound size={20} />
-                  Sign In
-                </Link>
+          <div className="mx-4 border-t border-gray-100"></div>
+
+          {/* Quick Actions (Wishlist & Cart) */}
+          <div className="p-4 space-y-1">
+            <a
+              href="/wishlist"
+              className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-primary-50 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center">
+                  <svg
+                    className="w-4 h-4 text-red-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
+                  </svg>
+                </div>
+                <span className="font-medium text-gray-700">Wishlist</span>
               </div>
-            ) : (
-              <div className="mt-auto pt-6 border-t border-gray-100">
-                <button
-                  onClick={() => handleSignout()}
-                  className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full bg-red-600 text-white font-bold shadow-md active:scale-95 transition-transform"
-                >
-                  <ImExit size={20} />
-                  Sign Out
-                </button>
+            </a>
+
+            <a
+              href="/cart"
+              className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-primary-50 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-primary-50 flex items-center justify-center">
+                  <svg
+                    className="w-4 h-4 text-primary-600"
+                    fill="currentColor"
+                    viewBox="0 0 640 512"
+                  >
+                    <path d="M24-16C10.7-16 0-5.3 0 8S10.7 32 24 32l45.3 0c3.9 0 7.2 2.8 7.9 6.6l52.1 286.3c6.2 34.2 36 59.1 70.8 59.1L456 384c13.3 0 24-10.7 24-24s-10.7-24-24-24l-255.9 0c-11.6 0-21.5-8.3-23.6-19.7l-5.1-28.3 303.6 0c30.8 0 57.2-21.9 62.9-52.2L568.9 69.9C572.6 50.2 557.5 32 537.4 32l-412.7 0-.4-2c-4.8-26.6-28-46-55.1-46L24-16zM208 512a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm224 0a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+                  </svg>
+                </div>
+                <span className="font-medium text-gray-700">Cart</span>
               </div>
-            )}
+              <span className="bg-primary-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                2
+              </span>
+            </a>
           </div>
+
+          <div className="mx-4 border-t border-gray-100"></div>
+
+          {/* User Profile & Sign Out */}
+          <div className="p-4 space-y-1">
+            <a
+              href="/profile"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition-colors"
+            >
+              <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+                <svg
+                  className="w-4 h-4 text-gray-500"
+                  fill="currentColor"
+                  viewBox="0 0 448 512"
+                >
+                  <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C102.1 288 0 390.1 0 512v0c0 13.3 10.7 24 24 24h400c13.3 0 24-10.7 24-24v0c0-121.9-102.1-224-224-224z" />
+                </svg>
+              </div>
+              <span className="font-medium text-gray-700">abdalla diaa</span>
+            </a>
+
+            <button className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 transition-colors w-full text-left">
+              <div className="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center">
+                <svg
+                  className="w-4 h-4 text-red-500"
+                  fill="currentColor"
+                  viewBox="0 0 512 512"
+                >
+                  <path d="M505 273c9.4-9.4 9.4-24.6 0-33.9L361 95c-6.9-6.9-17.2-8.9-26.2-5.2S320 102.3 320 112l0 80-112 0c-26.5 0-48 21.5-48 48l0 32c0 26.5 21.5 48 48 48l112 0 0 80c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2L505 273zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z" />
+                </svg>
+              </div>
+              <span className="font-medium text-red-600">Sign Out</span>
+            </button>
+          </div>
+
+          {/* Support Card */}
+          <a
+            href="/contact"
+            className="mx-4 mt-2 p-4 rounded-xl bg-gray-50 border border-gray-100 flex items-center gap-3 hover:bg-primary-50 transition-colors"
+          >
+            <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
+              <svg
+                className="w-5 h-5 text-primary-600"
+                fill="currentColor"
+                viewBox="0 0 448 512"
+              >
+                <path d="M224 64c-79 0-144.7 57.3-157.7 132.7 9.3-3 19.3-4.7 29.7-4.7l16 0c26.5 0 48 21.5 48 48l0 96c0 26.5-21.5 48-48 48l-16 0c-53 0-96-43-96-96l0-64C0 100.3 100.3 0 224 0S448 100.3 448 224l0 168.1c0 66.3-53.8 120-120.1 120l-87.9-.1-32 0c-26.5 0-48-21.5-48-48s21.5-48 48-48l32 0c26.5 0 48 21.5 48 48l0 0 40 0c39.8 0 72-32.2 72-72l0-20.9c-14.1 8.2-30.5 12.8-48 12.8l-16 0c-26.5 0-48-21.5-48-48l0-96c0-26.5 21.5-48 48-48l16 0c10.4 0 20.3 1.6 29.7 4.7-13-75.3-78.6-132.7-157.7-132.7z" />
+              </svg>
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-gray-700">
+                Need Help?
+              </div>
+              <div className="text-sm text-primary-600">Contact Support</div>
+            </div>
+          </a>
         </aside>
       </div>
     </>
