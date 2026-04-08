@@ -1,40 +1,22 @@
 "use server";
 
-import { decode } from "next-auth/jwt";
 import { cookies } from "next/headers";
+import { getToken } from "next-auth/jwt";
 
 export async function getDecodedTokenFunc() {
   const cookieStore = await cookies();
 
-  const cookieName =
-    process.env.NODE_ENV === "production"
-      ? "__Secure-next-auth.session-token"
-      : "next-auth.session-token";
-  let token = cookieStore.get(cookieName)?.value;
-
-  if (!token) {
-    let chunk = "";
-    let i = 0;
-    while ((chunk = cookieStore.get(`${cookieName}.${i}`)?.value ?? "")) {
-      token = (token ?? "") + chunk;
-      i++;
-    }
-  }
-
-  console.log("TOKEN:", token);
-
-  if (!token) return null;
-
-  const decodedCookie = await decode({
-    secret: process.env.AUTH_SECRET!,
-    token,
+  const token = await getToken({
+    req: {
+      cookies: {
+        "next-auth.session-token":
+          cookieStore.get("next-auth.session-token")?.value,
+        "__Secure-next-auth.session-token":
+          cookieStore.get("__Secure-next-auth.session-token")?.value,
+      },
+    } as any,
+    secret: process.env.NEXTAUTH_SECRET,
   });
 
-  console.log("Decoded", decodedCookie?.userToken);
-
-  return decodedCookie?.userToken;
+  return token?.userToken ?? null;
 }
-
-// const token =
-//   cookieStore.get("__Secure-next-auth.session-token")?.value ||
-//   cookieStore.get("next-auth.session-token")?.value;
