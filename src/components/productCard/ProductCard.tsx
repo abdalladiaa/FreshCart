@@ -8,7 +8,7 @@ import { LuRefreshCw } from "react-icons/lu";
 import AddToCartBtn from "../AddToCartBtn/AddToCartBtn";
 
 export default function ProductCard({ product }: { product: Product }) {
-  // حساب نسبة الخصم لو مش جاية جاهزة من الـ API
+  // Discound
   const discountPercentage = product.priceAfterDiscount
     ? Math.round(
         ((product.price - product.priceAfterDiscount) / product.price) * 100,

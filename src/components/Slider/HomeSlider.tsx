@@ -4,13 +4,13 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 import sliderImage from "../../../public/assets/home-slider-1.d79601a8.png";
-
 
 const slidesData = [
   {
@@ -79,28 +79,38 @@ export default function Homeslider() {
 
             {/* الـ Overlay والنصوص */}
             <div className="absolute inset-0 bg-gradient-to-r from-primary-600/80  to-primary-600/25 flex items-center px-6 md:px-20 z-10">
-              <div className="container h-full flex flex-col justify-center">
-                <h2 className="text-white text-4xl md:text-5xl font-bold mb-4 max-w-lg leading-tight">
-                  {slide.title}
-                </h2>
-                <p className="text-white text-lg md:text-xl opacity-90 mb-6">
-                  {slide.description}
-                </p>
-                <div className="flex items-center gap-3">
-                  <Link
-                    href={slide.btn1Link}
-                    className={`bg-white border-2 border-white/50 ${slide.btn1Color} px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg`}
-                  >
-                    {slide.btn1Text}
-                  </Link>
-                  <Link
-                    href={slide.btn2Link}
-                    className="bg-transparent border-2 border-white/50 text-white px-8 py-3 rounded-xl font-bold hover:bg-white/10 hover:scale-105 transition-all"
-                  >
-                    {slide.btn2Text}
-                  </Link>
+              <motion.div
+                initial={{ opacity: 0, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="h-full"
+              >
+                <div className="container h-full flex flex-col justify-center">
+                  <h2 className="text-white text-4xl md:text-5xl font-bold mb-4 max-w-lg leading-tight">
+                    {slide.title}
+                  </h2>
+
+                  <p className="text-white text-lg md:text-xl opacity-90 mb-6">
+                    {slide.description}
+                  </p>
+
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={slide.btn1Link}
+                      className={`bg-white border-2 border-white/50 ${slide.btn1Color} px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg`}
+                    >
+                      {slide.btn1Text}
+                    </Link>
+
+                    <Link
+                      href={slide.btn2Link}
+                      className="bg-transparent border-2 border-white/50 text-white px-8 py-3 rounded-xl font-bold hover:bg-white/10 hover:scale-105 transition-all"
+                    >
+                      {slide.btn2Text}
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </SwiperSlide>
         ))}

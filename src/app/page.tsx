@@ -24,6 +24,7 @@ export default function Home() {
 
       <div className="container">
         <div className="grid md:grid-cols-2 gap-6">
+          
           <PromoBanner
             title="Fresh Organic Fruits"
             subtitle="Get up to 40% off on selected organic fruits"
@@ -34,6 +35,7 @@ export default function Home() {
             badgeText="Deal of the Day"
             bgColor="bg-emerald-600"
             btnTextColor="text-emerald-600"
+            initial={-100}
           />
           <PromoBanner
             title="Exotic Vegetables"
@@ -45,6 +47,7 @@ export default function Home() {
             badgeText="New Arrivals"
             bgColor="bg-orange-500"
             btnTextColor="text-orange-500"
+            initial={100}
           />
         </div>
 
@@ -54,7 +57,7 @@ export default function Home() {
           gridCols="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
           renderItem={(product: any) => <ProductCard product={product} />}
         />
-          <NewsletterSection />
+        <NewsletterSection />
       </div>
     </>
   );
