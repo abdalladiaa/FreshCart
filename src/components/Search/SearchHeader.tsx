@@ -45,7 +45,10 @@ export default function SearchHeader({
       <div className="container mx-auto px-4 py-6">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-          <button onClick={() => router.push("/")} className="hover:text-emerald-600 transition-colors">
+          <button
+            onClick={() => router.push("/")}
+            className="hover:text-emerald-600 transition-colors"
+          >
             Home
           </button>
           <span>/</span>
@@ -58,7 +61,9 @@ export default function SearchHeader({
               Search Results
             </h1>
             <p className="text-gray-500">
-              We found <span className="font-bold text-gray-900">{totalResults}</span> products for your search
+              We found{" "}
+              <span className="font-bold text-gray-900">{totalResults}</span>{" "}
+              products for your search
             </p>
           </div>
 

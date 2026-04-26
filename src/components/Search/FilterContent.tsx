@@ -40,7 +40,7 @@ export default function FilterContent({
       "5K": 5000,
       "10K": 10000,
     };
-    
+
     const value = priceMap[priceStr];
     if (value) {
       const params = new URLSearchParams(searchParams.toString());
@@ -82,7 +82,10 @@ export default function FilterContent({
         </div>
         <div className="space-y-2 max-h-52 overflow-y-auto custom-scrollbar">
           {categories?.map((category) => (
-            <label key={category._id} className="flex items-center gap-3 cursor-pointer group">
+            <label
+              key={category._id}
+              className="flex items-center gap-3 cursor-pointer group"
+            >
               <input
                 {...register("category")}
                 type="checkbox"
@@ -104,7 +107,9 @@ export default function FilterContent({
         <h3 className="font-bold text-gray-900 mb-4">Price Range</h3>
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div>
-            <label className="text-xs text-gray-500 mb-1 block">Min (EGP)</label>
+            <label className="text-xs text-gray-500 mb-1 block">
+              Min (EGP)
+            </label>
             <input
               {...register("minPrice")}
               placeholder="0"
@@ -113,7 +118,9 @@ export default function FilterContent({
             />
           </div>
           <div>
-            <label className="text-xs text-gray-500 mb-1 block">Max (EGP)</label>
+            <label className="text-xs text-gray-500 mb-1 block">
+              Max (EGP)
+            </label>
             <input
               {...register("maxPrice")}
               placeholder="No limit"
@@ -124,15 +131,25 @@ export default function FilterContent({
         </div>
         <div className="flex flex-wrap gap-2">
           {["500", "1K", "5K", "10K"].map((price) => {
-            const numericValue = price === "1K" ? "1000" : price === "5K" ? "5000" : price === "10K" ? "10000" : "500";
-            const isActive = maxPriceValue?.toString() === numericValue && !minPriceValue;
+            const numericValue =
+              price === "1K"
+                ? "1000"
+                : price === "5K"
+                  ? "5000"
+                  : price === "10K"
+                    ? "10000"
+                    : "500";
+            const isActive =
+              maxPriceValue?.toString() === numericValue && !minPriceValue;
             return (
               <button
                 key={price}
                 type="button"
                 onClick={() => handleQuickPrice(price)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
-                  isActive ? "bg-emerald-600 text-white shadow-sm" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  isActive
+                    ? "bg-emerald-600 text-white shadow-sm"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
                 Under {price}
@@ -151,7 +168,10 @@ export default function FilterContent({
         </div>
         <div className="space-y-2 max-h-52 overflow-y-auto custom-scrollbar">
           {brands?.map((brand) => (
-            <label key={brand._id} className="flex items-center gap-3 cursor-pointer group">
+            <label
+              key={brand._id}
+              className="flex items-center gap-3 cursor-pointer group"
+            >
               <input
                 {...register("brand")}
                 type="checkbox"

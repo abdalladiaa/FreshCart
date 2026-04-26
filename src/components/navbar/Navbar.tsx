@@ -208,8 +208,6 @@ export default function Navbar() {
     }
   }
 
-
-
   return (
     <>
       <div className="hidden lg:block text-sm border-b border-gray-100 bg-white">

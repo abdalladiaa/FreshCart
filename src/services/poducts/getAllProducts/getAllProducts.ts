@@ -1,9 +1,11 @@
 import { AllProducts } from "@/interfaces/products.interface";
 
-export async function getAllProducts(searchParams?: URLSearchParams): Promise<AllProducts> {
-
+export async function getAllProducts(
+  searchParams?: URLSearchParams,
+): Promise<AllProducts> {
   const apiParams = new URLSearchParams(searchParams?.toString() || "");
-
+  console.log(apiParams);
+  console.log(apiParams);
 
   const minPrice = apiParams.get("minPrice");
   const maxPrice = apiParams.get("maxPrice");
@@ -12,7 +14,7 @@ export async function getAllProducts(searchParams?: URLSearchParams): Promise<Al
     apiParams.set("price[gte]", minPrice);
     apiParams.delete("minPrice");
   }
-  
+
   if (maxPrice) {
     apiParams.set("price[lte]", maxPrice);
     apiParams.delete("maxPrice");
@@ -20,10 +22,10 @@ export async function getAllProducts(searchParams?: URLSearchParams): Promise<Al
 
   const queryString = apiParams.toString();
 
-  const url = queryString 
+  const url = queryString
     ? `${process.env.NEXT_PUBLIC_BASE_URL}/products?${queryString}`
     : `${process.env.NEXT_PUBLIC_BASE_URL}/products`;
-    
+
   const response = await fetch(url);
   const data = await response.json();
   return data;
