@@ -1,11 +1,17 @@
 "use client";
 
+import React, { useState } from "react";
 import Loading from "@/app/loading";
 import ProductCard from "@/components/productCard/ProductCard";
 import FilterSidebar from "../FilterSidebar/FilterSidebar";
+import SearchHeader from "../SearchHeader";
+import SearchToolbar from "../SearchToolbar";
+import ActiveFilters from "../ActiveFilters";
+import EmptyState from "../EmptyState";
+import MobileFilterSidebar from "../MobileFilterSidebar";
 import { getAllProducts } from "@/services/poducts/getAllProducts/getAllProducts";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 interface SearchCompProps {
   allCategories: any[];
@@ -17,48 +23,97 @@ export default function SearchComp({
   allBrands,
 }: SearchCompProps) {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
-  const page = Number(searchParams.get("page")) || 1;
+
+  const searchTerm = searchParams.get("search") || "";
+  const filteredBrands = searchParams.getAll("brand") || "";
+  const filteredCategories = searchParams.getAll("category") || "";
+
   const queryString = searchParams.toString();
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["products", queryString, page],
-    queryFn: () => getAllProducts(queryString),
+    queryKey: ["products", queryString],
+    queryFn: () => getAllProducts(searchParams),
   });
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col lg:flex-row gap-8">
-        <FilterSidebar brands={allBrands} categories={allCategories} />
+  const products = data?.data || [];
 
-        <div className="flex-1 min-h-[400px]">
-          {isLoading ? (
-            <div className="h-full flex items-center justify-center">
-              <Loading />
-            </div>
-          ) : isError ? (
-            <div className="text-center py-20 text-red-500 font-medium bg-red-50 rounded-2xl border border-red-100">
-              Oops! Something went wrong while fetching products.
-            </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-                {(data?.data?.length ?? 0) > 0 ? (
-                  data?.data.map((product: any) => (
+  const [view, setView] = useState<"grid" | "list">("grid");
+
+  return (
+    <div className="min-h-screen bg-gray-50/50">
+      {/* Mobile Drawer */}
+      <MobileFilterSidebar
+        isOpen={isMobileFiltersOpen}
+        onClose={() => setIsMobileFiltersOpen(false)}
+        categories={allCategories}
+        brands={allBrands}
+      />
+
+      {/* Header Section */}
+      <SearchHeader
+        key={`header-${queryString}`}
+        searchTerm={searchTerm}
+        totalResults={products.length}
+      />
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar (Desktop) */}
+          <FilterSidebar 
+            key={`sidebar-${queryString}`}
+            brands={allBrands} 
+            categories={allCategories} 
+          />
+
+          {/* Main Content */}
+          <main className="flex-1 min-w-0">
+            {/* Toolbar: Sort & View Options */}
+            <SearchToolbar
+              view={view}
+              setView={setView}
+              onOpenFilters={() => setIsMobileFiltersOpen(true)}
+            />
+
+            {/* Active Filter Chips */}
+            <ActiveFilters 
+              searchTerm={searchTerm} 
+              selectedBrands={filteredBrands}
+              selectedCategories={filteredCategories}
+              minPrice={searchParams.get("minPrice")}
+              maxPrice={searchParams.get("maxPrice")}
+              allBrands={allBrands}
+              allCategories={allCategories}
+            />
+
+            {/* Content Area */}
+            <div className="min-h-[400px]">
+              {isLoading ? (
+                <div className="h-96 flex items-center justify-center">
+                  <Loading />
+                </div>
+              ) : isError ? (
+                <div className="text-center py-20 text-red-500 font-medium bg-red-50 rounded-2xl border border-red-100">
+                  Oops! Something went wrong while fetching products.
+                </div>
+              ) : products.length > 0 ? (
+                <div
+                  className={
+                    view === "grid"
+                      ? "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6"
+                      : "grid grid-cols-1 gap-6"
+                  }
+                >
+                  {products.map((product: any) => (
                     <ProductCard key={product._id} product={product} />
-                  ))
-                ) : (
-                  <div className="col-span-full text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                    <p className="text-gray-500 text-xl font-light">
-                      No products found matching your search or filters.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
+                  ))}
+                </div>
+              ) : (
+                <EmptyState />
+              )}
+            </div>
+          </main>
         </div>
       </div>
     </div>

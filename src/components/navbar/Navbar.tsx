@@ -195,7 +195,7 @@ export default function Navbar() {
   // ====================Search==============================
   const router = useRouter();
 
-  const { register, handleSubmit, reset, watch } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     defaultValues: {
       search: "",
     },
@@ -203,13 +203,12 @@ export default function Navbar() {
 
   function handleSearch(values: { search: string }) {
     if (values.search.trim()) {
-      console.log(values);
       router.push(`/search?search=${encodeURIComponent(values.search.trim())}`);
       reset();
     }
   }
 
-  const searchTerm = watch("search");
+
 
   return (
     <>
