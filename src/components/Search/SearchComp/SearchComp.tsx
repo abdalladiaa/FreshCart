@@ -25,19 +25,18 @@ export default function SearchComp({
 }: SearchCompProps) {
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
-  const { brand, category, maxPrice, minPrice, search, setFilters } =
-    useProductsFiltering();
   const searchParams = useSearchParams();
   const queryString = searchParams.toString();
 
+  const filters = useProductsFiltering();
+  const { brand, category, maxPrice, minPrice, search, setFilters } = filters;
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["Products", { category, search, brand, maxPrice, minPrice }],
-    queryFn: ()=> getAllProducts(queryString),
+    queryFn: () => getAllProducts(queryString),
   });
 
   const products = data?.data;
-
-  const filters = useProductsFiltering();
 
   useEffect(() => {
     console.log(filters);
@@ -56,7 +55,15 @@ export default function SearchComp({
 
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          <FilterSidebar brands={allBrands} categories={allCategories} />
+          <FilterSidebar
+            brands={allBrands}
+            categories={allCategories}
+            selectedCategory={category}
+            selectedBrand={brand}
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            setFilters={setFilters}
+          />
 
           <main className="flex-1 min-w-0">
             <SearchToolbar
