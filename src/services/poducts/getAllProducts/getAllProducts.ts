@@ -4,11 +4,10 @@ export async function getAllProducts(
   searchParams?: URLSearchParams,
 ): Promise<AllProducts> {
   const apiParams = new URLSearchParams(searchParams?.toString() || "");
-  console.log(apiParams);
-  console.log(apiParams);
 
   const minPrice = apiParams.get("minPrice");
   const maxPrice = apiParams.get("maxPrice");
+  const search = apiParams.get("search")
 
   if (minPrice) {
     apiParams.set("price[gte]", minPrice);
@@ -20,7 +19,14 @@ export async function getAllProducts(
     apiParams.delete("maxPrice");
   }
 
+  if(search){
+    apiParams.set("keyword" , search)
+    apiParams.delete("search")
+  }
+
   const queryString = apiParams.toString();
+  console.log(queryString , "query string");
+  
 
   const url = queryString
     ? `${process.env.NEXT_PUBLIC_BASE_URL}/products?${queryString}`
