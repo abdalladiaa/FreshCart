@@ -24,7 +24,7 @@ export default function FilterContent({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const { register, watch } = useForm<FilterFormValues>({
+  const { register, watch, setValue } = useForm<FilterFormValues>({
     defaultValues: {
       brand: searchParams.getAll("brand") || [],
       category: searchParams.getAll("category") || [],
@@ -43,10 +43,8 @@ export default function FilterContent({
 
     const value = priceMap[priceStr];
     if (value) {
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete("minPrice");
-      params.set("maxPrice", value.toString());
-      router.replace(`${pathname}?${params.toString()}`);
+      setValue("minPrice", "");
+      setValue("maxPrice", value.toString());
     }
   };
 
@@ -70,7 +68,12 @@ export default function FilterContent({
     if (maxPriceValue) params.set("maxPrice", maxPriceValue.toString());
     else params.delete("maxPrice");
 
-    router.replace(`${pathname}?${params.toString()}`);
+    const newQueryString = params.toString();
+    const currentQueryString = searchParams.toString();
+
+    if (newQueryString !== currentQueryString) {
+      router.replace(`${pathname}?${newQueryString}`, { scroll: false });
+    }
   }, [brandValue, categoryValue, minPriceValue, maxPriceValue]);
 
   return (
