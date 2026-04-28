@@ -25,7 +25,6 @@ export default function SearchComp({
   const searchParams = useSearchParams();
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
-  const searchTerm = searchParams.get("search") || "";
   const filteredBrands = searchParams.getAll("brand") || "";
   const filteredCategories = searchParams.getAll("category") || "";
 
@@ -52,7 +51,6 @@ export default function SearchComp({
 
       {/* Header Section */}
       <SearchHeader
-        searchTerm={searchTerm}
         totalResults={products.length}
       />
 
@@ -75,7 +73,6 @@ export default function SearchComp({
 
             {/* Active Filter Chips */}
             <ActiveFilters
-              searchTerm={searchTerm}
               selectedBrands={filteredBrands}
               selectedCategories={filteredCategories}
               minPrice={searchParams.get("minPrice")}

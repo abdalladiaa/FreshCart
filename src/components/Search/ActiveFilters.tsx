@@ -5,7 +5,6 @@ import { FaFilter } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
 interface ActiveFiltersProps {
-  searchTerm: string;
   selectedBrands: string[];
   selectedCategories: string[];
   minPrice: string | null;
@@ -15,7 +14,6 @@ interface ActiveFiltersProps {
 }
 
 export default function ActiveFilters({
-  searchTerm,
   selectedBrands,
   selectedCategories,
   minPrice,
@@ -50,8 +48,10 @@ export default function ActiveFilters({
       params.delete("maxPrice");
     }
 
-    router.replace(`${pathname}?${params.toString()}`);
+    router.push(`/search?${params.toString()}`);
   };
+
+  const searchTerm = searchParams.get("search");
 
   const hasFilters =
     searchTerm ||

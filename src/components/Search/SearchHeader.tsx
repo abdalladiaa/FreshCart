@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { IoSearch } from "react-icons/io5";
 
 interface SearchHeaderProps {
-  searchTerm: string;
   totalResults: number;
 }
 
@@ -15,16 +14,14 @@ interface SearchFormValues {
 }
 
 export default function SearchHeader({
-  searchTerm,
   totalResults,
 }: SearchHeaderProps) {
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const { register, watch } = useForm<SearchFormValues>({
     defaultValues: {
-      search: searchTerm,
+      search: searchParams.get("search") || "",
     },
   });
 
@@ -37,7 +34,7 @@ export default function SearchHeader({
     } else {
       params.delete("search");
     }
-    router.replace(`${pathname}?${params.toString()}`);
+    router.push(`/search?${params.toString()}`);
   }, [watchedSearch]);
 
   return (
