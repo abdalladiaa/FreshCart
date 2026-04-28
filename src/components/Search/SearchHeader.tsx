@@ -19,7 +19,7 @@ export default function SearchHeader({
 }: SearchHeaderProps) {
   const router = useRouter();
 
-  const {register , watch , setValue} = useForm({
+  const {register , watch} = useForm({
     defaultValues:{
       search:search
     }

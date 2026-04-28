@@ -12,6 +12,7 @@ import { getAllProducts } from "@/services/poducts/getAllProducts/getAllProducts
 import { useQuery } from "@tanstack/react-query";
 import Loading from "@/app/loading";
 import { useProductsFiltering } from "@/hooks/useProductsFiltering/useProductsFiltering";
+import { useSearchParams } from "next/navigation";
 
 interface SearchCompProps {
   allCategories: any[];
@@ -24,19 +25,23 @@ export default function SearchComp({
 }: SearchCompProps) {
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
-  const {brand , category , maxPrice , minPrice ,search , setFilters } = useProductsFiltering()
+  const { brand, category, maxPrice, minPrice, search, setFilters } =
+    useProductsFiltering();
+  const searchParams = useSearchParams();
+  const queryString = searchParams.toString();
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ["Products" , {category , search  , brand , maxPrice , minPrice}],
-    queryFn: getAllProducts,
+    queryKey: ["Products", { category, search, brand, maxPrice, minPrice }],
+    queryFn: ()=> getAllProducts(queryString),
   });
 
   const products = data?.data;
 
   const filters = useProductsFiltering();
 
-useEffect(() => {
-  console.log(filters);
-}, [filters]);
+  useEffect(() => {
+    console.log(filters);
+  }, [filters]);
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -71,7 +76,7 @@ useEffect(() => {
 
             <div className="min-h-100">
               {isLoading ? (
-                <Loading/>
+                <Loading />
               ) : error ? (
                 <p>Something went wrong</p>
               ) : products?.length ? (
