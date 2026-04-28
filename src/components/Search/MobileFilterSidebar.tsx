@@ -9,6 +9,11 @@ interface MobileFilterSidebarProps {
   onClose: () => void;
   categories: any[];
   brands: any[];
+  selectedCategory: string[];
+  selectedBrand: string[];
+  minPrice: string;
+  maxPrice: string;
+  setFilters: (filters: any) => void;
 }
 
 export default function MobileFilterSidebar({
@@ -16,6 +21,11 @@ export default function MobileFilterSidebar({
   onClose,
   categories,
   brands,
+  selectedCategory,
+  selectedBrand,
+  minPrice,
+  maxPrice,
+  setFilters,
 }: MobileFilterSidebarProps) {
   if (!isOpen) return null;
 
@@ -37,7 +47,15 @@ export default function MobileFilterSidebar({
           </button>
         </div>
 
-        <FilterContent categories={categories} brands={brands} />
+        <FilterContent
+          categories={categories}
+          brands={brands}
+          selectedCategory={selectedCategory}
+          selectedBrand={selectedBrand}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          setFilters={setFilters}
+        />
       </div>
     </div>
   );

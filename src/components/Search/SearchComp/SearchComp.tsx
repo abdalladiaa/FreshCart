@@ -49,6 +49,11 @@ export default function SearchComp({
         onClose={() => setIsMobileFiltersOpen(false)}
         categories={allCategories}
         brands={allBrands}
+        selectedCategory={category}
+        selectedBrand={brand}
+        minPrice={minPrice}
+        maxPrice={maxPrice}
+        setFilters={setFilters}
       />
 
       <SearchHeader search={search} setFilters={setFilters} totalResults={0} />
