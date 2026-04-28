@@ -1,58 +1,22 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { IoSearch } from "react-icons/io5";
 
 interface SearchHeaderProps {
   totalResults: number;
 }
 
-interface SearchFormValues {
-  search: string;
-}
-
 export default function SearchHeader({
   totalResults,
 }: SearchHeaderProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  const { register, handleSubmit, reset } = useForm<SearchFormValues>({
-    defaultValues: {
-      search: searchParams.get("search") || "",
-    },
-  });
-
-  useEffect(() => {
-    reset({
-      search: searchParams.get("search") || "",
-    });
-  }, [searchParams, reset]);
-
-  function handleSearch(values: SearchFormValues) {
-    const trimmedSearch = values.search.trim();
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (trimmedSearch) {
-      params.set("search", trimmedSearch);
-    } else {
-      params.delete("search");
-    }
-
-    const queryString = params.toString();
-    const currentQueryString = searchParams.toString();
-
-    if (queryString !== currentQueryString) {
-      router.push(queryString ? `/search?${queryString}` : "/search");
-    }
-  }
+  
 
   return (
     <div className="bg-white border-b border-gray-100">
       <div className="container mx-auto px-4 py-6">
-        {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
           <button
             onClick={() => router.push("/")}
@@ -77,10 +41,9 @@ export default function SearchHeader({
           </div>
 
           <div className="flex-1 max-w-xl w-full">
-            <form onSubmit={handleSubmit(handleSearch)} className="relative">
+            <form className="relative">
               <IoSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl" />
               <input
-                {...register("search")}
                 placeholder="Search for products..."
                 className="w-full pl-12 pr-14 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-lg"
                 type="text"

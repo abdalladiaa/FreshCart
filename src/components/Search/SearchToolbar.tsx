@@ -16,7 +16,6 @@ export default function SearchToolbar({
   return (
     <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
       <div className="flex items-center gap-4">
-        {/* Mobile Filter Button */}
         <button 
           onClick={onOpenFilters}
           className="lg:hidden flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-medium hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 transition-colors cursor-pointer"
@@ -25,7 +24,6 @@ export default function SearchToolbar({
           Filters
         </button>
 
-        {/* View Switcher */}
         <div className="flex items-center bg-white border border-gray-200 rounded-lg p-1">
           <button
             onClick={() => setView("grid")}
@@ -52,7 +50,6 @@ export default function SearchToolbar({
         </div>
       </div>
 
-      {/* Sort Dropdown */}
       <div className="flex items-center gap-2">
         <span className="text-sm text-gray-500">Sort by:</span>
         <select className="px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none bg-white cursor-pointer">
