@@ -24,7 +24,7 @@ export default function FilterContent({
   brands,
   setFilters,
 }: FilterContentProps) {
-  const { register, watch } = useForm({
+  const { register, watch, setValue } = useForm({
     defaultValues: {
       category: selectedCategory,
       brand: selectedBrand,
@@ -36,6 +36,11 @@ export default function FilterContent({
   const brandvalue = watch("brand");
   const maxPricevalue = watch("maxPrice");
   const minPricevalue = watch("minPrice");
+
+  useEffect(() => {
+    setValue("minPrice", minPrice);
+    setValue("maxPrice", maxPrice);
+  }, [minPrice, maxPrice, setValue]);
 
   useEffect(() => {
     setFilters({
@@ -81,6 +86,7 @@ export default function FilterContent({
               Min (EGP)
             </label>
             <input
+            {...register('minPrice')}
               placeholder="0"
               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
               type="number"
@@ -91,7 +97,7 @@ export default function FilterContent({
               Max (EGP)
             </label>
             <input
-            value={Number(maxPrice)}
+            {...register("maxPrice")}
               placeholder="No limit"
               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
               type="number"
@@ -133,6 +139,8 @@ export default function FilterContent({
               className="flex items-center gap-3 cursor-pointer group"
             >
               <input
+                value={brand._id}
+                {...register("brand")}
                 type="checkbox"
                 className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
               />

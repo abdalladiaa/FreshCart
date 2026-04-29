@@ -1,5 +1,5 @@
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 export type Filters = {
   search?: string;
@@ -56,12 +56,15 @@ export function useProductsFiltering() {
     [searchParams, router],
   );
 
-  return {
-    search,
-    category,
-    brand,
-    maxPrice,
-    minPrice,
-    setFilters,
-  };
+  return useMemo(
+    () => ({
+      search,
+      category,
+      brand,
+      maxPrice,
+      minPrice,
+      setFilters,
+    }),
+    [search, category, brand, maxPrice, minPrice, setFilters],
+  );
 }

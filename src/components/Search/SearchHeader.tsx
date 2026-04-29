@@ -28,8 +28,10 @@ export default function SearchHeader({
   const searchValue = watch("search")
 
   useEffect(()=>{
-    setFilters({search: searchValue})
-  } , [searchValue])
+      if (searchValue !== search) {
+    setFilters({ search: searchValue });
+  }
+  } , [searchValue , search])
 
   return (
     <div className="bg-white border-b border-gray-100">
