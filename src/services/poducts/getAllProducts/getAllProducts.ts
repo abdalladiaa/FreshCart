@@ -5,13 +5,13 @@ export async function getAllProducts(
 ): Promise<AllProducts> {
   const params = new URLSearchParams(queryString);
 
-  const search = params.get("search");
+  const search = params.get("q");
   const maxPrice = params.get("maxPrice");
   const minPrice = params.get("minPrice");
 
   if (search) {
     params.set("keyword", search);
-    params.delete("search");
+    params.delete("q");
   }
   if (minPrice) {
     params.set("price[gte]", minPrice);

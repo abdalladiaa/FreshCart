@@ -2,7 +2,7 @@
 
 import { Filters } from "@/hooks/useProductsFiltering/useProductsFiltering";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { IoSearch } from "react-icons/io5";
 
@@ -18,6 +18,7 @@ export default function SearchHeader({
   totalResults,
 }: SearchHeaderProps) {
   const router = useRouter();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const {register , watch} = useForm({
     defaultValues:{
@@ -27,11 +28,21 @@ export default function SearchHeader({
 
   const searchValue = watch("search")
 
-  useEffect(()=>{
-      if (searchValue !== search) {
-    setFilters({ search: searchValue });
-  }
-  } , [searchValue , search])
+  const debouncedSetFilters = useCallback(
+    (value: string) => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        if (value !== search) {
+          setFilters({ search: value });
+        }
+      }, 400);
+    },
+    [search, setFilters]
+  );
+
+  useEffect(() => {
+    debouncedSetFilters(searchValue);
+  }, [searchValue, debouncedSetFilters]);
 
   return (
     <div className="bg-white border-b border-gray-100">
