@@ -13,7 +13,7 @@ export function useProductsFiltering() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const search = searchParams.get("search") || "";
+  const search = searchParams.get("q") || "";
   const category = searchParams.getAll("category");
   const brand = searchParams.getAll("brand");
   const maxPrice = searchParams.get("maxPrice") || "";
@@ -25,8 +25,8 @@ export function useProductsFiltering() {
 
       if (filters.search !== undefined) {
         filters.search
-          ? params.set("search", filters.search)
-          : params.delete("search");
+          ? params.set("q", filters.search)
+          : params.delete("q");
       }
 
       if (filters.category) {
