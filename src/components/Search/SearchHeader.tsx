@@ -1,48 +1,17 @@
-"use client";
+"use client"
 
-import { Filters } from "@/hooks/useProductsFiltering/useProductsFiltering";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
-import { IoSearch } from "react-icons/io5";
+import { useRouter, useSearchParams } from "next/navigation"
+import { IoSearch } from "react-icons/io5"
 
 interface SearchHeaderProps {
-  totalResults: number;
-  setFilters: (filters: Filters) => void;
-  search:string
+  totalResults: number
+  setValue: any
 }
 
-export default function SearchHeader({
-  search,
-  setFilters,
-  totalResults,
-}: SearchHeaderProps) {
-  const router = useRouter();
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const {register , watch} = useForm({
-    defaultValues:{
-      search:search
-    }
-  })
-
-  const searchValue = watch("search")
-
-  const debouncedSetFilters = useCallback(
-    (value: string) => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => {
-        if (value !== search) {
-          setFilters({ search: value });
-        }
-      }, 400);
-    },
-    [search, setFilters]
-  );
-
-  useEffect(() => {
-    debouncedSetFilters(searchValue);
-  }, [searchValue, debouncedSetFilters]);
+export default function SearchHeader({ totalResults, setValue }: SearchHeaderProps) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const currentSearch = searchParams.get("q") || ""
 
   return (
     <div className="bg-white border-b border-gray-100">
@@ -64,9 +33,22 @@ export default function SearchHeader({
               Search Results
             </h1>
             <p className="text-gray-500">
-              We found{" "}
-              <span className="font-bold text-gray-900">{totalResults}</span>{" "}
-              products for your search
+              {currentSearch ? (
+                <>
+                  We found{" "}
+                  <span className="font-bold text-gray-900">{totalResults}</span>{" "}
+                  products for{" "}
+                  <span className="font-semibold text-gray-900">
+                    &ldquo;{currentSearch}&rdquo;
+                  </span>
+                </>
+              ) : (
+                <>
+                  We found{" "}
+                  <span className="font-bold text-gray-900">{totalResults}</span>{" "}
+                  products for your search
+                </>
+              )}
             </p>
           </div>
 
@@ -74,7 +56,7 @@ export default function SearchHeader({
             <div className="relative">
               <IoSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl" />
               <input
-                {...register("search")}
+                onChange={(e)=>setValue("search" , e.target.value)}
                 placeholder="Search for products..."
                 className="w-full pl-12 pr-14 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-lg"
                 type="text"
@@ -84,5 +66,5 @@ export default function SearchHeader({
         </div>
       </div>
     </div>
-  );
+  )
 }

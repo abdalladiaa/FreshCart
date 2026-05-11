@@ -4,6 +4,7 @@ export async function getAllProducts(
   queryString: string = "",
 ): Promise<AllProducts> {
   const params = new URLSearchParams(queryString);
+  
 
   const search = params.get("q");
   const maxPrice = params.get("maxPrice");
@@ -24,6 +25,8 @@ export async function getAllProducts(
   }
 
   const query = params.toString();
+  console.log(query);
+  
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/products${query ? `?${query}` : ""}`;
 

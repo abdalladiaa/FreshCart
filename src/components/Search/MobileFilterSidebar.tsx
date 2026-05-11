@@ -1,19 +1,15 @@
-"use client";
+"use client"
 
-import React from "react";
-import { IoClose } from "react-icons/io5";
-import FilterContent from "./FilterContent";
+import { IoClose } from "react-icons/io5"
+import FilterContent from "./FilterContent"
 
 interface MobileFilterSidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
-  categories: any[];
-  brands: any[];
-  selectedCategory: string[];
-  selectedBrand: string[];
-  minPrice: string;
-  maxPrice: string;
-  setFilters: (filters: any) => void;
+  isOpen: boolean
+  onClose: () => void
+  categories: any[]
+  brands: any[]
+  register: any
+  setValue: any
 }
 
 export default function MobileFilterSidebar({
@@ -21,20 +17,17 @@ export default function MobileFilterSidebar({
   onClose,
   categories,
   brands,
-  selectedCategory,
-  selectedBrand,
-  minPrice,
-  maxPrice,
-  setFilters,
+  register,
+  setValue,
 }: MobileFilterSidebarProps) {
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
         onClick={onClose}
-      ></div>
+      />
 
       <div className="absolute right-0 top-0 bottom-0 w-80 bg-white p-6 overflow-y-auto shadow-2xl transition-transform">
         <div className="flex items-center justify-between mb-6">
@@ -50,13 +43,10 @@ export default function MobileFilterSidebar({
         <FilterContent
           categories={categories}
           brands={brands}
-          selectedCategory={selectedCategory}
-          selectedBrand={selectedBrand}
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-          setFilters={setFilters}
+          register={register}
+          setValue={setValue}
         />
       </div>
     </div>
-  );
+  )
 }

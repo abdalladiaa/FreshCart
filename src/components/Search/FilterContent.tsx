@@ -1,55 +1,24 @@
-"use client";
+"use client"
 
-import { Filters } from "@/hooks/useProductsFiltering/useProductsFiltering";
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useSearchParams } from "next/navigation"
 
 interface FilterContentProps {
-  categories: any[];
-  brands: any[];
-  selectedCategory: string[];
-  selectedBrand: string[];
-  minPrice: string;
-  maxPrice: string;
-
-  setFilters: (filters: Filters) => void;
+  categories: any[]
+  brands: any[]
+  register: any
+  setValue: any
 }
 
 export default function FilterContent({
-  selectedCategory,
-  selectedBrand,
-  minPrice,
-  maxPrice,
   categories,
   brands,
-  setFilters,
+  register,
+  setValue,
 }: FilterContentProps) {
-  const { register, watch, setValue } = useForm({
-    defaultValues: {
-      category: selectedCategory,
-      brand: selectedBrand,
-      minPrice,
-      maxPrice,
-    },
-  });
-  const categoryvalue = watch("category");
-  const brandvalue = watch("brand");
-  const maxPricevalue = watch("maxPrice");
-  const minPricevalue = watch("minPrice");
+  const searchParams = useSearchParams()
+  const currentMaxPrice = searchParams.get("maxPrice") || ""
+  const currentMinPrice = searchParams.get("minPrice") || ""
 
-  useEffect(() => {
-    setValue("minPrice", minPrice);
-    setValue("maxPrice", maxPrice);
-  }, [minPrice, maxPrice, setValue]);
-
-  useEffect(() => {
-    setFilters({
-      brand: brandvalue,
-      category: categoryvalue,
-      maxPrice: maxPricevalue,
-      minPrice: minPricevalue,
-    });
-  }, [categoryvalue, brandvalue, maxPricevalue, minPricevalue]);
   return (
     <div className="space-y-6">
       <div>
@@ -82,22 +51,18 @@ export default function FilterContent({
         <h3 className="font-bold text-gray-900 mb-4">Price Range</h3>
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div>
-            <label className="text-xs text-gray-500 mb-1 block">
-              Min (EGP)
-            </label>
+            <label className="text-xs text-gray-500 mb-1 block">Min (EGP)</label>
             <input
-            {...register('minPrice')}
+              {...register("minPrice")}
               placeholder="0"
               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
               type="number"
             />
           </div>
           <div>
-            <label className="text-xs text-gray-500 mb-1 block">
-              Max (EGP)
-            </label>
+            <label className="text-xs text-gray-500 mb-1 block">Max (EGP)</label>
             <input
-            {...register("maxPrice")}
+              {...register("maxPrice")}
               placeholder="No limit"
               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
               type="number"
@@ -106,16 +71,20 @@ export default function FilterContent({
         </div>
         <div className="flex flex-wrap gap-2">
           {["500", "1000", "5000", "10000"].map((price) => {
-            const isActive = maxPrice === price;
-
+            const isActive =
+              currentMaxPrice === price &&
+              (!currentMinPrice || currentMinPrice === "0");
             return (
               <button
-                onClick={() => setFilters({ maxPrice: price })}
+                onClick={() => {
+                  setValue("minPrice", "0");
+                  setValue("maxPrice", price);
+                }}
                 key={price}
                 type="button"
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
                   isActive
-                    ? "bg-emerald-600 text-white"
+                    ? "bg-emerald-600 text-white shadow-sm"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
@@ -152,5 +121,5 @@ export default function FilterContent({
         </div>
       </div>
     </div>
-  );
+  )
 }

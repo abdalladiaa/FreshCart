@@ -6,12 +6,14 @@ interface SearchToolbarProps {
   onOpenFilters: () => void;
   view: "grid" | "list";
   setView: (view: "grid" | "list") => void;
+  register: any;
 }
 
 export default function SearchToolbar({
   onOpenFilters,
   view,
   setView,
+  register,
 }: SearchToolbarProps) {
   return (
     <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
@@ -52,7 +54,7 @@ export default function SearchToolbar({
 
       <div className="flex items-center gap-2">
         <span className="text-sm text-gray-500">Sort by:</span>
-        <select className="px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none bg-white cursor-pointer">
+        <select {...register("sort")} className="px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none bg-white cursor-pointer">
           <option value="">Relevance</option>
           <option value="price">Price: Low to High</option>
           <option value="-price">Price: High to Low</option>

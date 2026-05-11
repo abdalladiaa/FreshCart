@@ -203,7 +203,7 @@ export default function Navbar() {
 
   function handleSearch(values: { search: string }) {
     if (values.search.trim()) {
-      router.push(`/search?search=${encodeURIComponent(values.search.trim())}`);
+      router.push(`/search?q=${encodeURIComponent(values.search.trim())}`);
       reset();
     }
   }

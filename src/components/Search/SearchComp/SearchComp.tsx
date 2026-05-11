@@ -1,42 +1,110 @@
-"use client";
+"use client"
 
-import React, { useEffect, useState } from "react";
-import ProductCard from "@/components/productCard/ProductCard";
-import FilterSidebar from "../FilterSidebar/FilterSidebar";
-import SearchHeader from "../SearchHeader";
-import SearchToolbar from "../SearchToolbar";
-import ActiveFilters from "../ActiveFilters";
-import EmptyState from "../EmptyState";
-import MobileFilterSidebar from "../MobileFilterSidebar";
-import { getAllProducts } from "@/services/poducts/getAllProducts/getAllProducts";
-import { useQuery } from "@tanstack/react-query";
-import Loading from "@/app/loading";
-import { useProductsFiltering } from "@/hooks/useProductsFiltering/useProductsFiltering";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react"
+import { useForm } from "react-hook-form"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useQuery } from "@tanstack/react-query"
+import { getAllProducts } from "@/services/poducts/getAllProducts/getAllProducts"
+import ProductCard from "@/components/productCard/ProductCard"
+import FilterSidebar from "../FilterSidebar/FilterSidebar"
+import SearchHeader from "../SearchHeader"
+import SearchToolbar from "../SearchToolbar"
+import ActiveFilters from "../ActiveFilters"
+import EmptyState from "../EmptyState"
+import MobileFilterSidebar from "../MobileFilterSidebar"
+import Loading from "@/app/loading"
 
-interface SearchCompProps {
-  allCategories: any[];
-  allBrands: any[];
+type Filters = {
+  search: string
+  category: string[]
+  brand: string[]
+  sort: string
+  minPrice: string
+  maxPrice: string
 }
 
-export default function SearchComp({
-  allCategories,
-  allBrands,
-}: SearchCompProps) {
-  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
-  const [view, setView] = useState<"grid" | "list">("grid");
-  const searchParams = useSearchParams();
-  const queryString = searchParams.toString();
+interface SearchCompProps {
+  allCategories: any[]
+  allBrands: any[]
+}
 
-  const filters = useProductsFiltering();
-  const { brand, category, maxPrice, minPrice, search, setFilters } = filters;
+export default function SearchComp({ allCategories, allBrands }: SearchCompProps) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const queryString = searchParams.toString()
+  const [view, setView] = useState<"grid" | "list">("grid")
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false)
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["Products", { category, search, brand, maxPrice, minPrice }],
+    queryKey: ["Products", queryString],
     queryFn: () => getAllProducts(queryString),
-  });
+  })
 
-  const products = data?.data;
+  const { register, watch, reset, setValue } = useForm<Filters>({
+    defaultValues: {
+      search: searchParams.get("q") ?? "",
+      category: searchParams.getAll("category"),
+      brand: searchParams.getAll("brand"),
+      sort: searchParams.get("sort") ?? "",
+      minPrice: searchParams.get("minPrice") ?? "",
+      maxPrice: searchParams.get("maxPrice") ?? "",
+    },
+  })
+
+  const values = watch()
+  console.log(values);
+  
+  const isFormUpdating = useRef(false)
+  const isFirstRender = useRef(true)
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+
+    const params = new URLSearchParams(searchParams.toString())
+    params.delete("q")
+    params.delete("category")
+    params.delete("brand")
+    params.delete("sort")
+    params.delete("minPrice")
+    params.delete("maxPrice")
+
+    if (values.search) params.set("q", values.search)
+    values.category?.forEach((id) => { if (id) params.append("category", id) })
+    values.brand?.forEach((id) => { if (id) params.append("brand", id) })
+    if (values.sort) params.set("sort", values.sort)
+    if (values.minPrice) params.set("minPrice", values.minPrice)
+    if (values.maxPrice) params.set("maxPrice", values.maxPrice)
+
+    isFormUpdating.current = true
+    router.push(`/search?${params.toString()}`, { scroll: false })
+  }, [values.search, values.category, values.brand, values.sort, values.minPrice, values.maxPrice])
+
+  useEffect(() => {
+    if (isFirstRender.current || isFormUpdating.current) {
+      isFormUpdating.current = false
+      return
+    }
+
+    reset({
+      search: searchParams.get("q") ?? "",
+      category: searchParams.getAll("category"),
+      brand: searchParams.getAll("brand"),
+      sort: searchParams.get("sort") ?? "",
+      minPrice: searchParams.get("minPrice") ?? "",
+      maxPrice: searchParams.get("maxPrice") ?? "",
+    })
+  }, [searchParams, reset])
+
+  const clearAll = () => {
+    reset({ search: "", category: [], brand: [], sort: "", minPrice: "", maxPrice: "" })
+    router.push("/search")
+  }
+
+  const products = data?.data
+  const totalResults = data?.results ?? products?.length ?? 0
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -45,25 +113,19 @@ export default function SearchComp({
         onClose={() => setIsMobileFiltersOpen(false)}
         categories={allCategories}
         brands={allBrands}
-        selectedCategory={category}
-        selectedBrand={brand}
-        minPrice={minPrice}
-        maxPrice={maxPrice}
-        setFilters={setFilters}
+        register={register}
+        setValue={setValue}
       />
 
-      <SearchHeader search={search} setFilters={setFilters} totalResults={0} />
+      <SearchHeader totalResults={totalResults} setValue= {setValue} />
 
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           <FilterSidebar
-            brands={allBrands}
             categories={allCategories}
-            selectedCategory={category}
-            selectedBrand={brand}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            setFilters={setFilters}
+            brands={allBrands}
+            register={register}
+            setValue={setValue}
           />
 
           <main className="flex-1 min-w-0">
@@ -71,15 +133,14 @@ export default function SearchComp({
               view={view}
               setView={setView}
               onOpenFilters={() => setIsMobileFiltersOpen(true)}
+              register={register}
             />
 
             <ActiveFilters
-              selectedBrands={[]}
-              selectedCategories={[]}
-              minPrice={null}
-              maxPrice={null}
-              allBrands={allBrands}
+              setValue={setValue}
               allCategories={allCategories}
+              allBrands={allBrands}
+              onClear={clearAll}
             />
 
             <div className="min-h-100">
@@ -107,5 +168,5 @@ export default function SearchComp({
         </div>
       </div>
     </div>
-  );
+  )
 }
