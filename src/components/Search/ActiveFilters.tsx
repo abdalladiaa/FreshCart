@@ -64,8 +64,8 @@ export default function ActiveFilters({
       </span>
 
       {search && (
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-medium">
-          Search: {search}
+        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-medium">
+          {search}
           <button
             onClick={removeSearch}
             className="hover:text-red-500 transition-colors cursor-pointer"

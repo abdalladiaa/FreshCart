@@ -10,6 +10,7 @@ interface MobileFilterSidebarProps {
   brands: any[]
   register: any
   setValue: any
+  watch: any
 }
 
 export default function MobileFilterSidebar({
@@ -19,6 +20,7 @@ export default function MobileFilterSidebar({
   brands,
   register,
   setValue,
+  watch
 }: MobileFilterSidebarProps) {
   if (!isOpen) return null
 
@@ -45,6 +47,7 @@ export default function MobileFilterSidebar({
           brands={brands}
           register={register}
           setValue={setValue}
+          watch={watch}
         />
       </div>
     </div>

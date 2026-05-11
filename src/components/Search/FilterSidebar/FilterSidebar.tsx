@@ -5,6 +5,7 @@ interface FilterSidebarProps {
   brands: any[]
   register: any
   setValue: any
+  watch: any
 }
 
 export default function FilterSidebar({
@@ -12,6 +13,7 @@ export default function FilterSidebar({
   brands,
   register,
   setValue,
+  watch,
 }: FilterSidebarProps) {
   return (
     <aside className="hidden lg:block w-64 shrink-0">
@@ -21,6 +23,7 @@ export default function FilterSidebar({
           brands={brands}
           register={register}
           setValue={setValue}
+          watch={watch}
         />
       </div>
     </aside>

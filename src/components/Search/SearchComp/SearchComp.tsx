@@ -109,6 +109,7 @@ export default function SearchComp({ allCategories, allBrands }: SearchCompProps
   return (
     <div className="min-h-screen bg-gray-50/50">
       <MobileFilterSidebar
+      watch={watch}
         isOpen={isMobileFiltersOpen}
         onClose={() => setIsMobileFiltersOpen(false)}
         categories={allCategories}
@@ -122,6 +123,7 @@ export default function SearchComp({ allCategories, allBrands }: SearchCompProps
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           <FilterSidebar
+          watch={watch}
             categories={allCategories}
             brands={allBrands}
             register={register}
