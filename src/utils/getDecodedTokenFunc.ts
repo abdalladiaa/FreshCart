@@ -3,16 +3,12 @@
 import { decode } from "next-auth/jwt";
 import { cookies } from "next/headers";
 
-export async function getDecodedTokenFunc() {
+export async function getDecodedCookie() {
   const cookieStore = await cookies();
 
-    process.env.NODE_ENV === "production"
-      ? "__Secure-next-auth.session-token"
-      : "next-auth.session-token";
-
-const token =
-  cookieStore.get("__Secure-next-auth.session-token")?.value ||
-  cookieStore.get("next-auth.session-token")?.value;
+  const token =
+    cookieStore.get("__Secure-next-auth.session-token")?.value ||
+    cookieStore.get("next-auth.session-token")?.value;
 
   if (!token) return null;
 
@@ -21,8 +17,11 @@ const token =
     token,
   });
 
+  return decodedCookie;
+}
 
-
+export async function getDecodedTokenFunc() {
+  const decodedCookie = await getDecodedCookie();
   return decodedCookie?.userToken;
 }
 

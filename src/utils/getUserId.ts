@@ -2,5 +2,6 @@
 import { getDecodedCookie } from "./getDecodedTokenFunc";
 
 export async function getUserId() {
-  return ( await getDecodedCookie())?.user?.id;
+  const token = await getDecodedCookie();
+  return token?.userId;
 }

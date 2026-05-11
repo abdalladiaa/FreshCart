@@ -15,6 +15,7 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     userToken?: string;
+    userId?: string;
   }
 }
 
@@ -45,7 +46,7 @@ export const nextAuthConfig: NextAuthOptions = {
         if (data.message === "success") {
           console.log(data.user._id, "user response");
           return {
-            id: data.user.email,
+            id: data.user._id, // Use the actual _id
             email: data.user.email,
             name: data.user.name,
             userToken: data.token,
@@ -59,11 +60,16 @@ export const nextAuthConfig: NextAuthOptions = {
   callbacks: {
     jwt: ({ token, user }) => {
       if (user) {
-        token.userToken = user.userToken;
+        token.userToken = (user as any).userToken;
+        token.userId = user.id;
       }
       return token;
     },
     session: ({ session, token }) => {
+      if (session.user) {
+        (session.user as any).userToken = token.userToken;
+        (session.user as any).id = token.userId;
+      }
       return session;
     },
   },
