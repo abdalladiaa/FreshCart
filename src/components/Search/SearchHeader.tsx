@@ -1,16 +1,44 @@
-"use client"
+"use client";
 
-import { useRouter } from "next/navigation"
-import { IoSearch } from "react-icons/io5"
+import { useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { IoSearch } from "react-icons/io5";
 
 interface SearchHeaderProps {
-  totalResults: number
-  searchValue: string
-  onSearchChange: (value: string) => void
+  totalResults: number;
+  searchValue: string;
+  onSearchChange: (value: string) => void;
 }
 
-export default function SearchHeader({ totalResults, searchValue, onSearchChange }: SearchHeaderProps) {
-  const router = useRouter()
+export default function SearchHeader({
+  totalResults,
+  searchValue,
+  onSearchChange,
+}: SearchHeaderProps) {
+  const router = useRouter();
+  const isFirstRender = useRef(true);
+  const { register, handleSubmit, reset, watch } = useForm({
+    defaultValues: { search: searchValue },
+  });
+
+  const watchedSearch = watch("search");
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    onSearchChange(watchedSearch);
+  }, [watchedSearch]);
+
+  useEffect(() => {
+    reset({ search: searchValue });
+  }, [searchValue, reset]);
+
+  const onSubmit = (data: { search: string }) => {
+    onSearchChange(data.search);
+  };
 
   return (
     <div className="bg-white border-b border-gray-100">
@@ -35,7 +63,9 @@ export default function SearchHeader({ totalResults, searchValue, onSearchChange
               {searchValue ? (
                 <>
                   We found{" "}
-                  <span className="font-bold text-gray-900">{totalResults}</span>{" "}
+                  <span className="font-bold text-gray-900">
+                    {totalResults}
+                  </span>{" "}
                   products for{" "}
                   <span className="font-semibold text-gray-900">
                     &ldquo;{searchValue}&rdquo;
@@ -44,7 +74,9 @@ export default function SearchHeader({ totalResults, searchValue, onSearchChange
               ) : (
                 <>
                   We found{" "}
-                  <span className="font-bold text-gray-900">{totalResults}</span>{" "}
+                  <span className="font-bold text-gray-900">
+                    {totalResults}
+                  </span>{" "}
                   products for your search
                 </>
               )}
@@ -52,19 +84,20 @@ export default function SearchHeader({ totalResults, searchValue, onSearchChange
           </div>
 
           <div className="flex-1 max-w-xl w-full">
-            <div className="relative">
-              <IoSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl" />
+            <form onSubmit={handleSubmit(onSubmit)} className="relative flex items-center">
+              <div className="absolute left-4 text-gray-400 text-xl pointer-events-none">
+                <IoSearch />
+              </div>
               <input
-                value={searchValue}
-                onChange={(e) => onSearchChange(e.target.value)}
+                {...register("search")}
                 placeholder="Search for products..."
-                className="w-full pl-12 pr-14 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-lg"
+                className="w-full pl-12 pr-28 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-lg"
                 type="text"
               />
-            </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

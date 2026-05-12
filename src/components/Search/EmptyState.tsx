@@ -14,7 +14,7 @@ export default function EmptyState({ onClear }: EmptyStateProps) {
       </div>
       <h3 className="text-lg font-bold text-gray-900 mb-2">No Products Found</h3>
       <p className="text-gray-500 mb-6 max-w-xs mx-auto">
-        Try adjusting your search or filters to find what you're looking for.
+        Try adjusting your search or filters to find what you&apos;re looking for.
       </p>
       <button
         onClick={onClear}

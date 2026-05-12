@@ -1,10 +1,12 @@
 "use client";
 
 import FilterContent from "../FilterContent";
+import type { Category } from "@/interfaces/categories.interface";
+import type { Brand } from "@/interfaces/brands.interface";
 
 interface FilterSidebarProps {
-  categories: any[];
-  brands: any[];
+  categories: Category[];
+  brands: Brand[];
   selectedCategories: string[];
   selectedBrands: string[];
   minPrice: string;

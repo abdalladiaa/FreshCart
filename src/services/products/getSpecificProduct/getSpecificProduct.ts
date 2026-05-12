@@ -1,4 +1,4 @@
-export async function getSpecificProduct(id: String) {
+export async function getSpecificProduct(id: string) {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/products/${id}`,
     {

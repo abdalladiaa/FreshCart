@@ -2,6 +2,8 @@
 
 import { IoClose } from "react-icons/io5";
 import { FaFilter } from "react-icons/fa";
+import type { Category } from "@/interfaces/categories.interface";
+import type { Brand } from "@/interfaces/brands.interface";
 
 interface ActiveFiltersProps {
   searchValue: string;
@@ -10,8 +12,8 @@ interface ActiveFiltersProps {
   sortValue: string;
   minPrice: string;
   maxPrice: string;
-  allCategories: any[];
-  allBrands: any[];
+  allCategories: Category[];
+  allBrands: Brand[];
   onRemoveSearch: () => void;
   onRemoveCategory: (id: string) => void;
   onRemoveBrand: (id: string) => void;
@@ -46,9 +48,9 @@ export default function ActiveFilters({
   if (!hasFilters) return null;
 
   const getCategoryName = (id: string) =>
-    allCategories?.find((c: any) => c._id === id)?.name || id;
+    allCategories?.find((c: Category) => c._id === id)?.name || id;
   const getBrandName = (id: string) =>
-    allBrands?.find((b: any) => b._id === id)?.name || id;
+    allBrands?.find((b: Brand) => b._id === id)?.name || id;
 
   return (
     <div className="mb-6 flex items-center gap-2 flex-wrap">

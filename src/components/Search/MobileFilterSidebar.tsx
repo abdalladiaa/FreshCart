@@ -2,12 +2,14 @@
 
 import { IoClose } from "react-icons/io5";
 import FilterContent from "./FilterContent";
+import type { Category } from "@/interfaces/categories.interface";
+import type { Brand } from "@/interfaces/brands.interface";
 
 interface MobileFilterSidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  categories: any[];
-  brands: any[];
+  categories: Category[];
+  brands: Brand[];
   selectedCategories: string[];
   selectedBrands: string[];
   minPrice: string;

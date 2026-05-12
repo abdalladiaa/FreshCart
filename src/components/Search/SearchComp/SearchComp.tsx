@@ -12,10 +12,13 @@ import ActiveFilters from "../ActiveFilters";
 import EmptyState from "../EmptyState";
 import MobileFilterSidebar from "../MobileFilterSidebar";
 import Loading from "@/app/loading";
+import type { Product } from "@/interfaces/products.interface";
+import type { Category } from "@/interfaces/categories.interface";
+import type { Brand } from "@/interfaces/brands.interface";
 
 interface SearchCompProps {
-  allCategories: any[];
-  allBrands: any[];
+  allCategories: Category[];
+  allBrands: Brand[];
 }
 
 export default function SearchComp({ allCategories, allBrands }: SearchCompProps) {
@@ -162,7 +165,7 @@ export default function SearchComp({ allCategories, allBrands }: SearchCompProps
                       : "flex flex-col gap-4"
                   }
                 >
-                  {products.map((product: any) => (
+                  {products.map((product: Product) => (
                     <ProductCard product={product} key={product._id} />
                   ))}
                 </div>
