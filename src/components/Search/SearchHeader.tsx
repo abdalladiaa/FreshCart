@@ -1,17 +1,16 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { IoSearch } from "react-icons/io5"
 
 interface SearchHeaderProps {
   totalResults: number
-  setValue: any
+  searchValue: string
+  onSearchChange: (value: string) => void
 }
 
-export default function SearchHeader({ totalResults, setValue }: SearchHeaderProps) {
+export default function SearchHeader({ totalResults, searchValue, onSearchChange }: SearchHeaderProps) {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const currentSearch = searchParams.get("q") || ""
 
   return (
     <div className="bg-white border-b border-gray-100">
@@ -33,13 +32,13 @@ export default function SearchHeader({ totalResults, setValue }: SearchHeaderPro
               Search Results
             </h1>
             <p className="text-gray-500">
-              {currentSearch ? (
+              {searchValue ? (
                 <>
                   We found{" "}
                   <span className="font-bold text-gray-900">{totalResults}</span>{" "}
                   products for{" "}
                   <span className="font-semibold text-gray-900">
-                    &ldquo;{currentSearch}&rdquo;
+                    &ldquo;{searchValue}&rdquo;
                   </span>
                 </>
               ) : (
@@ -56,7 +55,8 @@ export default function SearchHeader({ totalResults, setValue }: SearchHeaderPro
             <div className="relative">
               <IoSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl" />
               <input
-                onChange={(e)=>setValue("search" , e.target.value)}
+                value={searchValue}
+                onChange={(e) => onSearchChange(e.target.value)}
                 placeholder="Search for products..."
                 className="w-full pl-12 pr-14 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-lg"
                 type="text"

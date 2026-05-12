@@ -1,35 +1,46 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { IoClose } from "react-icons/io5";
 import { FaFilter } from "react-icons/fa";
 
 interface ActiveFiltersProps {
-  setValue: any;
+  searchValue: string;
+  selectedCategories: string[];
+  selectedBrands: string[];
+  sortValue: string;
+  minPrice: string;
+  maxPrice: string;
   allCategories: any[];
   allBrands: any[];
-  onClear: () => void;
+  onRemoveSearch: () => void;
+  onRemoveCategory: (id: string) => void;
+  onRemoveBrand: (id: string) => void;
+  onRemoveSort: () => void;
+  onRemovePrice: () => void;
+  onClearAll: () => void;
 }
 
 export default function ActiveFilters({
-  setValue,
+  searchValue,
+  selectedCategories,
+  selectedBrands,
+  sortValue,
+  minPrice,
+  maxPrice,
   allCategories,
   allBrands,
-  onClear,
+  onRemoveSearch,
+  onRemoveCategory,
+  onRemoveBrand,
+  onRemoveSort,
+  onRemovePrice,
+  onClearAll,
 }: ActiveFiltersProps) {
-  const searchParams = useSearchParams();
-  const search = searchParams.get("q");
-  const categories = searchParams.getAll("category");
-  const brands = searchParams.getAll("brand");
-  const sort = searchParams.get("sort");
-  const minPrice = searchParams.get("minPrice");
-  const maxPrice = searchParams.get("maxPrice");
-
   const hasFilters =
-    search ||
-    categories.length ||
-    brands.length ||
-    sort ||
+    searchValue ||
+    selectedCategories.length ||
+    selectedBrands.length ||
+    sortValue ||
     minPrice ||
     maxPrice;
   if (!hasFilters) return null;
@@ -39,23 +50,6 @@ export default function ActiveFilters({
   const getBrandName = (id: string) =>
     allBrands?.find((b: any) => b._id === id)?.name || id;
 
-  const removeSearch = () => setValue("search", "");
-  const removeCategory = (id: string) =>
-    setValue(
-      "category",
-      categories.filter((c) => c !== id),
-    );
-  const removeBrand = (id: string) =>
-    setValue(
-      "brand",
-      brands.filter((b) => b !== id),
-    );
-  const removeSort = () => setValue("sort", "");
-  const removePrice = () => {
-    setValue("minPrice", "");
-    setValue("maxPrice", "");
-  };
-
   return (
     <div className="mb-6 flex items-center gap-2 flex-wrap">
       <span className="text-sm text-gray-500 flex items-center gap-1">
@@ -63,11 +57,11 @@ export default function ActiveFilters({
         Active:
       </span>
 
-      {search && (
+      {searchValue && (
         <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-medium">
-          {search}
+          {searchValue}
           <button
-            onClick={removeSearch}
+            onClick={onRemoveSearch}
             className="hover:text-red-500 transition-colors cursor-pointer"
             title="Remove search"
           >
@@ -76,14 +70,14 @@ export default function ActiveFilters({
         </span>
       )}
 
-      {categories.map((id) => (
+      {selectedCategories.map((id) => (
         <span
           key={`cat-${id}`}
           className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs"
         >
           {getCategoryName(id)}
           <button
-            onClick={() => removeCategory(id)}
+            onClick={() => onRemoveCategory(id)}
             className="hover:text-red-500 transition-colors cursor-pointer"
             title="Remove category"
           >
@@ -92,14 +86,14 @@ export default function ActiveFilters({
         </span>
       ))}
 
-      {brands.map((id) => (
+      {selectedBrands.map((id) => (
         <span
           key={`br-${id}`}
           className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-violet-100 text-violet-700 text-xs"
         >
           {getBrandName(id)}
           <button
-            onClick={() => removeBrand(id)}
+            onClick={() => onRemoveBrand(id)}
             className="hover:text-red-500 transition-colors cursor-pointer"
             title="Remove brand"
           >
@@ -108,11 +102,11 @@ export default function ActiveFilters({
         </span>
       ))}
 
-      {sort && (
+      {sortValue && (
         <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-sky-100 text-sky-700 text-xs">
-          Sort: {sort}
+          Sort: {sortValue}
           <button
-            onClick={removeSort}
+            onClick={onRemoveSort}
             className="hover:text-red-500 transition-colors cursor-pointer"
             title="Remove sort"
           >
@@ -125,7 +119,7 @@ export default function ActiveFilters({
         <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-100 text-amber-700 text-xs">
           {minPrice || "0"} - {maxPrice || "∞"} EGP
           <button
-            onClick={removePrice}
+            onClick={onRemovePrice}
             className="hover:text-red-500 transition-colors cursor-pointer"
             title="Remove price filter"
           >
@@ -136,7 +130,7 @@ export default function ActiveFilters({
 
       <button
         type="button"
-        onClick={onClear}
+        onClick={onClearAll}
         className="text-xs text-gray-500 hover:text-gray-700 underline ml-2 cursor-pointer"
       >
         Clear all

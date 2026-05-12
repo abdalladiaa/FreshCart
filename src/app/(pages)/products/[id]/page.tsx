@@ -1,6 +1,6 @@
 import ProductDetailsComp from "@/components/productDetails/ProductDetailsComp/ProductDetailsComp";
 import { ProductDetails } from "@/interfaces/productDetails.interface";
-import { getSpecificProduct } from "@/services/poducts/getSpecificProduct/getSpecificProduct";
+import { getSpecificProduct } from "@/services/products/getSpecificProduct/getSpecificProduct";
 
 export default async function Details({ params }: { params: { id: string } }) {
   const { id } = await params;

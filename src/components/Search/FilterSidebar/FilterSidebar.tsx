@@ -1,19 +1,31 @@
-import FilterContent from "../FilterContent"
+"use client";
+
+import FilterContent from "../FilterContent";
 
 interface FilterSidebarProps {
-  categories: any[]
-  brands: any[]
-  register: any
-  setValue: any
-  watch: any
+  categories: any[];
+  brands: any[];
+  selectedCategories: string[];
+  selectedBrands: string[];
+  minPrice: string;
+  maxPrice: string;
+  onCategoryChange: (id: string) => void;
+  onBrandChange: (id: string) => void;
+  onMinPriceChange: (value: string) => void;
+  onMaxPriceChange: (value: string) => void;
 }
 
 export default function FilterSidebar({
   categories,
   brands,
-  register,
-  setValue,
-  watch,
+  selectedCategories,
+  selectedBrands,
+  minPrice,
+  maxPrice,
+  onCategoryChange,
+  onBrandChange,
+  onMinPriceChange,
+  onMaxPriceChange,
 }: FilterSidebarProps) {
   return (
     <aside className="hidden lg:block w-64 shrink-0">
@@ -21,11 +33,16 @@ export default function FilterSidebar({
         <FilterContent
           categories={categories}
           brands={brands}
-          register={register}
-          setValue={setValue}
-          watch={watch}
+          selectedCategories={selectedCategories}
+          selectedBrands={selectedBrands}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          onCategoryChange={onCategoryChange}
+          onBrandChange={onBrandChange}
+          onMinPriceChange={onMinPriceChange}
+          onMaxPriceChange={onMaxPriceChange}
         />
       </div>
     </aside>
-  )
+  );
 }

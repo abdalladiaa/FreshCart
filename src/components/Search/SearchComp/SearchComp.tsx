@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { getAllProducts } from "@/services/poducts/getAllProducts/getAllProducts";
+import { getAllProducts } from "@/services/products/getAllProducts/getAllProducts";
 import ProductCard from "@/components/productCard/ProductCard";
 import FilterSidebar from "../FilterSidebar/FilterSidebar";
 import SearchHeader from "../SearchHeader";
@@ -14,27 +13,16 @@ import EmptyState from "../EmptyState";
 import MobileFilterSidebar from "../MobileFilterSidebar";
 import Loading from "@/app/loading";
 
-type Filters = {
-  search: string;
-  category: string[];
-  brand: string[];
-  sort: string;
-  minPrice: string;
-  maxPrice: string;
-};
-
 interface SearchCompProps {
   allCategories: any[];
   allBrands: any[];
 }
 
-export default function SearchComp({
-  allCategories,
-  allBrands,
-}: SearchCompProps) {
+export default function SearchComp({ allCategories, allBrands }: SearchCompProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryString = searchParams.toString();
+
   const [view, setView] = useState<"grid" | "list">("grid");
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
@@ -43,90 +31,47 @@ export default function SearchComp({
     queryFn: () => getAllProducts(queryString),
   });
 
-  const { register, watch, reset, setValue } = useForm<Filters>({
-    defaultValues: {
-      search: searchParams.get("q") ?? "",
-      category: searchParams.getAll("category"),
-      brand: searchParams.getAll("brand"),
-      sort: searchParams.get("sort") ?? "",
-      minPrice: searchParams.get("minPrice") ?? "",
-      maxPrice: searchParams.get("maxPrice") ?? "",
-    },
-  });
+  const searchValue = searchParams.get("q") ?? "";
+  const selectedCategories = searchParams.getAll("category");
+  const selectedBrands = searchParams.getAll("brand");
+  const sortValue = searchParams.get("sort") ?? "";
+  const minPrice = searchParams.get("minPrice") ?? "";
+  const maxPrice = searchParams.get("maxPrice") ?? "";
 
-  const values = watch();
-  console.log(values);
-
-  const isFormUpdating = useRef(false);
-  const isFirstRender = useRef(true);
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
+  const setFilter = (key: string, value: string | string[]) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.delete("q");
-    params.delete("category");
-    params.delete("brand");
-    params.delete("sort");
+    params.delete(key);
+    if (Array.isArray(value)) {
+      value.forEach((v) => { if (v) params.append(key, v); });
+    } else if (value) {
+      params.set(key, value);
+    }
+    router.replace(`/search?${params.toString()}`, { scroll: false });
+  };
+
+  const toggleCategory = (id: string) => {
+    const next = selectedCategories.includes(id)
+      ? selectedCategories.filter((c) => c !== id)
+      : [...selectedCategories, id];
+    setFilter("category", next);
+  };
+
+  const toggleBrand = (id: string) => {
+    const next = selectedBrands.includes(id)
+      ? selectedBrands.filter((b) => b !== id)
+      : [...selectedBrands, id];
+    setFilter("brand", next);
+  };
+
+  const removePriceFilter = () => {
+    const params = new URLSearchParams(searchParams.toString());
     params.delete("minPrice");
     params.delete("maxPrice");
-
-    if (values.search) params.set("q", values.search);
-    
-
-    Array.from(new Set(values.category))?.forEach((id) => {
-      if (id) params.append("category", id);
-    });
-
-
-    Array.from(new Set(values.brand))?.forEach((id) => {
-      if (id) params.append("brand", id);
-    });
-
-    if (values.sort) params.set("sort", values.sort);
-    if (values.minPrice) params.set("minPrice", values.minPrice);
-    if (values.maxPrice) params.set("maxPrice", values.maxPrice);
-
-    isFormUpdating.current = true;
-    router.push(`/search?${params.toString()}`, { scroll: false });
-  }, [
-    values.search,
-    values.category,
-    values.brand,
-    values.sort,
-    values.minPrice,
-    values.maxPrice,
-  ]);
-
-  useEffect(() => {
-    if (isFirstRender.current || isFormUpdating.current) {
-      isFormUpdating.current = false;
-      return;
-    }
-
-    reset({
-      search: searchParams.get("q") ?? "",
-      category: searchParams.getAll("category"),
-      brand: searchParams.getAll("brand"),
-      sort: searchParams.get("sort") ?? "",
-      minPrice: searchParams.get("minPrice") ?? "",
-      maxPrice: searchParams.get("maxPrice") ?? "",
-    });
-  }, [searchParams, reset]);
+    router.replace(`/search?${params.toString()}`, { scroll: false });
+  };
 
   const clearAll = () => {
-    reset({
-      search: "",
-      category: [],
-      brand: [],
-      sort: "",
-      minPrice: "",
-      maxPrice: "",
-    });
-    router.push("/search");
+    router.replace("/search");
   };
 
   const products = data?.data;
@@ -135,25 +80,39 @@ export default function SearchComp({
   return (
     <div className="min-h-screen bg-gray-50/50">
       <MobileFilterSidebar
-        watch={watch}
         isOpen={isMobileFiltersOpen}
         onClose={() => setIsMobileFiltersOpen(false)}
         categories={allCategories}
         brands={allBrands}
-        register={register}
-        setValue={setValue}
+        selectedCategories={selectedCategories}
+        selectedBrands={selectedBrands}
+        minPrice={minPrice}
+        maxPrice={maxPrice}
+        onCategoryChange={toggleCategory}
+        onBrandChange={toggleBrand}
+        onMinPriceChange={(value) => setFilter("minPrice", value)}
+        onMaxPriceChange={(value) => setFilter("maxPrice", value)}
       />
 
-      <SearchHeader totalResults={totalResults} setValue={setValue} />
+      <SearchHeader
+        totalResults={totalResults}
+        searchValue={searchValue}
+        onSearchChange={(value) => setFilter("q", value)}
+      />
 
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           <FilterSidebar
-            watch={watch}
             categories={allCategories}
             brands={allBrands}
-            register={register}
-            setValue={setValue}
+            selectedCategories={selectedCategories}
+            selectedBrands={selectedBrands}
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            onCategoryChange={toggleCategory}
+            onBrandChange={toggleBrand}
+            onMinPriceChange={(value) => setFilter("minPrice", value)}
+            onMaxPriceChange={(value) => setFilter("maxPrice", value)}
           />
 
           <main className="flex-1 min-w-0">
@@ -161,21 +120,40 @@ export default function SearchComp({
               view={view}
               setView={setView}
               onOpenFilters={() => setIsMobileFiltersOpen(true)}
-              register={register}
+              sortValue={sortValue}
+              onSortChange={(value) => setFilter("sort", value)}
             />
 
             <ActiveFilters
-              setValue={setValue}
+              searchValue={searchValue}
+              selectedCategories={selectedCategories}
+              selectedBrands={selectedBrands}
+              sortValue={sortValue}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
               allCategories={allCategories}
               allBrands={allBrands}
-              onClear={clearAll}
+              onRemoveSearch={() => setFilter("q", "")}
+              onRemoveCategory={(id) => {
+                const next = selectedCategories.filter((c) => c !== id);
+                setFilter("category", next);
+              }}
+              onRemoveBrand={(id) => {
+                const next = selectedBrands.filter((b) => b !== id);
+                setFilter("brand", next);
+              }}
+              onRemoveSort={() => setFilter("sort", "")}
+              onRemovePrice={removePriceFilter}
+              onClearAll={clearAll}
             />
 
             <div className="min-h-100">
               {isLoading ? (
                 <Loading />
               ) : error ? (
-                <p>Something went wrong</p>
+                <p className="text-center py-20 text-red-500">
+                  Something went wrong. Please try again.
+                </p>
               ) : products?.length ? (
                 <div
                   className={
@@ -189,7 +167,7 @@ export default function SearchComp({
                   ))}
                 </div>
               ) : (
-                <EmptyState />
+                <EmptyState onClear={clearAll} />
               )}
             </div>
           </main>

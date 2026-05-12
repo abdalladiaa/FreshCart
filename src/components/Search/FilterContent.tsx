@@ -1,49 +1,34 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-
 interface FilterContentProps {
   categories: any[];
   brands: any[];
-  register: any;
-  setValue: any;
-  watch: any;
+  selectedCategories: string[];
+  selectedBrands: string[];
+  minPrice: string;
+  maxPrice: string;
+  onCategoryChange: (id: string) => void;
+  onBrandChange: (id: string) => void;
+  onMinPriceChange: (value: string) => void;
+  onMaxPriceChange: (value: string) => void;
 }
 
 export default function FilterContent({
   categories,
   brands,
-  register,
-  setValue,
-  watch,
+  selectedCategories,
+  selectedBrands,
+  minPrice,
+  maxPrice,
+  onCategoryChange,
+  onBrandChange,
+  onMinPriceChange,
+  onMaxPriceChange,
 }: FilterContentProps) {
-  const searchParams = useSearchParams();
-  const currentMaxPrice = searchParams.get("maxPrice") || "";
-  const currentMinPrice = searchParams.get("minPrice") || "";
-  
-  const selectedCategories = watch("category") || [];
-  const selectedBrands = watch("brand") || [];
-
-  const handleCategoryChange = (id: string) => {
-    const next = selectedCategories.includes(id)
-      ? selectedCategories.filter((c: string) => c !== id)
-      : [...selectedCategories, id];
-    setValue("category", next);
-  };
-
-  const handleBrandChange = (id: string) => {
-    const next = selectedBrands.includes(id)
-      ? selectedBrands.filter((b: string) => b !== id)
-      : [...selectedBrands, id];
-    setValue("brand", next);
-  };
-
   return (
     <div className="space-y-6">
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-gray-900">Categories</h3>
-        </div>
+        <h3 className="font-bold text-gray-900 mb-4">Categories</h3>
         <div className="space-y-2 max-h-52 overflow-y-auto custom-scrollbar">
           {categories?.map((category) => (
             <label
@@ -53,7 +38,7 @@ export default function FilterContent({
               <input
                 type="checkbox"
                 checked={selectedCategories.includes(category._id)}
-                onChange={() => handleCategoryChange(category._id)}
+                onChange={() => onCategoryChange(category._id)}
                 className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
               />
               <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
@@ -74,9 +59,8 @@ export default function FilterContent({
               Min (EGP)
             </label>
             <input
-              {...register("minPrice")}
-              value={currentMinPrice ?? ""}
-              onChange={(e) => setValue("minPrice", e.target.value)}
+              value={minPrice}
+              onChange={(e) => onMinPriceChange(e.target.value)}
               placeholder="0"
               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
               type="number"
@@ -87,9 +71,8 @@ export default function FilterContent({
               Max (EGP)
             </label>
             <input
-              {...register("maxPrice")}
-              value={currentMaxPrice ?? ""}
-              onChange={(e) => setValue("maxPrice", e.target.value)}
+              value={maxPrice}
+              onChange={(e) => onMaxPriceChange(e.target.value)}
               placeholder="No limit"
               className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
               type="number"
@@ -99,13 +82,13 @@ export default function FilterContent({
         <div className="flex flex-wrap gap-2">
           {["500", "1000", "5000", "10000"].map((price) => {
             const isActive =
-              currentMaxPrice === price &&
-              (!currentMinPrice || currentMinPrice === "0");
+              maxPrice === price &&
+              (!minPrice || minPrice === "0");
             return (
               <button
                 onClick={() => {
-                  setValue("minPrice", "0");
-                  setValue("maxPrice", price);
+                  onMinPriceChange("0");
+                  onMaxPriceChange(price);
                 }}
                 key={price}
                 type="button"
@@ -125,9 +108,7 @@ export default function FilterContent({
       <hr className="border-gray-100" />
 
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-gray-900">Brands</h3>
-        </div>
+        <h3 className="font-bold text-gray-900 mb-4">Brands</h3>
         <div className="space-y-2 max-h-52 overflow-y-auto custom-scrollbar">
           {brands?.map((brand) => (
             <label
@@ -137,7 +118,7 @@ export default function FilterContent({
               <input
                 type="checkbox"
                 checked={selectedBrands.includes(brand._id)}
-                onChange={() => handleBrandChange(brand._id)}
+                onChange={() => onBrandChange(brand._id)}
                 className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
               />
               <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">

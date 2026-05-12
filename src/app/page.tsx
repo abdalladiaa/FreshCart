@@ -6,7 +6,7 @@ import ProductCard from "@/components/productCard/ProductCard";
 import PromoBanner from "@/components/PromoBanner/PromoBanner";
 import Homeslider from "@/components/Slider/HomeSlider";
 import { getAllCategories } from "@/services/categories/getAllCategories/getAllCategories";
-import { getAllProducts } from "@/services/poducts/getAllProducts/getAllProducts";
+import { getAllProducts } from "@/services/products/getAllProducts/getAllProducts";
 
 export default function Home() {
   return (
