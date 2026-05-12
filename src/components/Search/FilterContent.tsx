@@ -20,7 +20,23 @@ export default function FilterContent({
   const searchParams = useSearchParams();
   const currentMaxPrice = searchParams.get("maxPrice") || "";
   const currentMinPrice = searchParams.get("minPrice") || "";
-  console.log(currentMaxPrice);
+  
+  const selectedCategories = watch("category") || [];
+  const selectedBrands = watch("brand") || [];
+
+  const handleCategoryChange = (id: string) => {
+    const next = selectedCategories.includes(id)
+      ? selectedCategories.filter((c: string) => c !== id)
+      : [...selectedCategories, id];
+    setValue("category", next);
+  };
+
+  const handleBrandChange = (id: string) => {
+    const next = selectedBrands.includes(id)
+      ? selectedBrands.filter((b: string) => b !== id)
+      : [...selectedBrands, id];
+    setValue("brand", next);
+  };
 
   return (
     <div className="space-y-6">
@@ -35,9 +51,9 @@ export default function FilterContent({
               className="flex items-center gap-3 cursor-pointer group"
             >
               <input
-                value={category._id}
-                {...register("category")}
                 type="checkbox"
+                checked={selectedCategories.includes(category._id)}
+                onChange={() => handleCategoryChange(category._id)}
                 className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
               />
               <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
@@ -119,9 +135,9 @@ export default function FilterContent({
               className="flex items-center gap-3 cursor-pointer group"
             >
               <input
-                value={brand._id}
-                {...register("brand")}
                 type="checkbox"
+                checked={selectedBrands.includes(brand._id)}
+                onChange={() => handleBrandChange(brand._id)}
                 className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
               />
               <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
