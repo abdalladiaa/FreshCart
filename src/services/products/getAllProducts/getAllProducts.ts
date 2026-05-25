@@ -22,6 +22,27 @@ export async function getAllProducts(
     params.delete("maxPrice");
   }
 
+
+
+  const subcategory = params.get("subcategory");
+  if (subcategory) {
+    params.set("category[in]", subcategory);
+    params.delete("subcategory");
+  }
+
+    const category = params.get("category");
+    if(category){
+      params.set("category[in]", category);
+      params.delete("category")
+    }
+
+
+  const brand = params.get("brand");
+  if (brand) {
+    params.set("brand[in]", brand);
+    params.delete("brand");
+  }
+
   const query = params.toString();
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/products${query ? `?${query}` : ""}`;
 

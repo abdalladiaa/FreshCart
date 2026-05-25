@@ -1,4 +1,5 @@
 import PageDescription from "@/components/PageDescription/PageDescription";
+import SubCategoriesComp from "@/components/SubCategoriesComp/SubCategoriesComp";
 import { getSpecificCategory } from "@/services/categories/getSpecificCaregory/getSpecificCaregory";
 import Image from "next/image";
 import React from "react";
@@ -26,6 +27,7 @@ export default async function Category({ params }: { params: { id: string } }) {
         page={category.name}
         description={"Choose a subcategory to browse products"}
       />
+      <SubCategoriesComp categorieId = {id}/>
     </>
   );
 }

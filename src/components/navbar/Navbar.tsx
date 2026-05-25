@@ -433,7 +433,7 @@ export default function Navbar() {
                           icon: <HiOutlineUser size={18} />,
                         },
                         {
-                          href: "/orders",
+                          href: "/allorders",
                           label: "My Orders",
                           icon: <FaBoxOpen size={18} />,
                         },
