@@ -417,6 +417,13 @@ export default function Navbar() {
                       />
                     </button>
                   )}
+                  {/* Backdrop to close dropdown when clicking outside */}
+                  {infoMenu && (
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setInfoMenu(false)}
+                    />
+                  )}
                   {/* Drop Down Menu */}
                   <div
                     className={` ${infoMenu ? "opacity-100 scale-100 visible" : "opacity-0 scale-95 invisible"} 
@@ -472,6 +479,7 @@ export default function Navbar() {
                         <Link
                           key={index}
                           href={item.href}
+                          onClick={() => setInfoMenu(false)}
                           className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all group"
                         >
                           <span className="text-gray-400 group-hover:text-primary-600 transition-colors">
@@ -485,7 +493,10 @@ export default function Navbar() {
                     {/* 3. Sign Out Action */}
                     <div className="  p-2 border-t border-gray-100">
                       <button
-                        onClick={() => handleSignout()}
+                        onClick={() => {
+                          handleSignout();
+                          setInfoMenu(false);
+                        }}
                         className=" cursor-pointer flex items-center gap-3 px-3 py-2.5 text-sm text-red-600 hover:bg-red-50 w-full rounded-lg transition-all font-bold group"
                       >
                         <ImExit
@@ -586,24 +597,28 @@ export default function Navbar() {
             <div className="space-y-1">
               <Link
                 href="/"
+                onClick={() => setMenu(false)}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
               >
                 Home
               </Link>
               <Link
                 href="/products"
+                onClick={() => setMenu(false)}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
               >
                 Shop
               </Link>
               <Link
                 href="/categories"
+                onClick={() => setMenu(false)}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
               >
                 Categories
               </Link>
               <Link
                 href="/brands"
+                onClick={() => setMenu(false)}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
               >
                 Brands
@@ -617,6 +632,7 @@ export default function Navbar() {
           <div className="p-4 space-y-1">
             <Link
               href="/wishlist"
+              onClick={() => setMenu(false)}
               className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-primary-50 transition-colors"
             >
               <div className="flex items-center gap-3">
@@ -646,6 +662,7 @@ export default function Navbar() {
 
             <Link
               href="/cart"
+              onClick={() => setMenu(false)}
               className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-primary-50 transition-colors"
             >
               <div className="flex items-center gap-3">
@@ -674,6 +691,7 @@ export default function Navbar() {
               <>
                 <Link
                   href="/profile"
+                  onClick={() => setMenu(false)}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition-colors group"
                 >
                   <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
@@ -708,6 +726,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/signin"
+                onClick={() => setMenu(false)}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary-600 text-white hover:bg-primary-700 transition-all font-bold justify-center"
               >
                 <LuUserRound size={18} />
@@ -719,6 +738,7 @@ export default function Navbar() {
           {/* Support Card */}
           <Link
             href="/contact"
+            onClick={() => setMenu(false)}
             className="mx-4 mt-2 p-4 rounded-xl bg-gray-50 border border-gray-100 flex items-center gap-3 hover:bg-primary-50 transition-colors"
           >
             <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">

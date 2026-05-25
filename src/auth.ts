@@ -1,5 +1,6 @@
 import { NextAuthOptions, User as NextAuthUser } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { jwtDecode } from "jwt-decode";
 
 declare module "next-auth" {
   interface User {
@@ -43,10 +44,12 @@ export const nextAuthConfig: NextAuthOptions = {
           },
         );
         const data = await response.json();
+        
         if (data.message === "success") {
-          console.log(data.user._id, "user response");
+          console.log(data, "user response");
+          const decode = jwtDecode<{ id: string }>(data.token);
           return {
-            id: data.user._id, // Use the actual _id
+            id: decode.id,
             email: data.user.email,
             name: data.user.name,
             userToken: data.token,
