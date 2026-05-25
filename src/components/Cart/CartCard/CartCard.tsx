@@ -26,7 +26,7 @@ export default function CartCard({ product }: { product: CartProduct }) {
     <div className="group relative bg-white rounded-3xl p-1 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] transition-all duration-500 border border-gray-100/50">
       <div className="p-4 sm:p-5">
         <div className="flex flex-col sm:flex-row gap-5 items-center sm:items-start">
-          {/* صورة المنتج مع Badge الحالة */}
+
           <div className="relative shrink-0">
             <Link
               href={`/products/${_id}`}
@@ -59,7 +59,7 @@ export default function CartCard({ product }: { product: CartProduct }) {
             </div>
           </div>
 
-          {/* تفاصيل المنتج */}
+
           <div className="flex-1 w-full flex flex-col min-h-[140px]">
             <div className="flex justify-between items-start gap-4">
               <div className="space-y-1">
@@ -76,7 +76,7 @@ export default function CartCard({ product }: { product: CartProduct }) {
                 </p>
               </div>
 
-              {/* زر الحذف العلوي (Desktop) */}
+
               <button
                 onClick={handleDeleteItem}
                 className="hidden sm:flex cursor-pointer h-10 w-10 rounded-xl bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-500 items-center justify-center transition-all duration-300 border border-transparent hover:border-red-100"
@@ -89,10 +89,10 @@ export default function CartCard({ product }: { product: CartProduct }) {
               </button>
             </div>
 
-            {/* التحكم في السعر والكمية */}
+
             <div className="mt-auto pt-4 flex flex-wrap items-end justify-between gap-4">
               <div className="flex items-center gap-6">
-                {/* السعر */}
+
                 <div className="space-y-0.5">
                   <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
                     Unit Price
@@ -103,7 +103,7 @@ export default function CartCard({ product }: { product: CartProduct }) {
                   </p>
                 </div>
 
-                {/* أزرار الكمية بتصميم مودرن */}
+
                 <div className="flex items-center bg-gray-100/80 p-1.5 rounded-2xl border border-gray-200/50 backdrop-blur-sm">
                   <DecreaseQuantityBtn
                     productId={_id}
@@ -129,7 +129,7 @@ export default function CartCard({ product }: { product: CartProduct }) {
                 </div>
               </div>
 
-              {/* الإجمالي وزر الحذف للموبايل */}
+
               <div className="flex items-center justify-between w-full sm:w-auto sm:gap-6 border-t sm:border-0 border-gray-50 pt-4 sm:pt-0">
                 <div className="text-left sm:text-right">
                   <p className="text-[10px] text-gray-400 font-bold uppercase">

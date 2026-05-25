@@ -1,12 +1,20 @@
 import { Product } from "@/interfaces/products.interface";
 import Image from "next/image";
 import Link from "next/link";
-import { FaRegHeart, FaStar, FaEye, FaStarHalfAlt } from "react-icons/fa";
+import {
+  FaRegHeart,
+  FaStar,
+  FaEye,
+  FaStarHalfAlt,
+  FaCheck,
+  FaHeart,
+} from "react-icons/fa";
 import { HiPlus } from "react-icons/hi";
 import { LuRefreshCw as RefreshIcon } from "react-icons/lu";
 import AddToCartBtn from "../AddToCartBtn/AddToCartBtn";
+import AddToWishlistBtn from "../AddToCartBtn/AddToWishlistBtn/AddToWishlistBtn";
 
-export default function ProductCard({ product }: { product: Product }) {
+export default  function ProductCard({ product }: { product: Product }) {
   const hasDiscount =
     product.priceAfterDiscount !== undefined &&
     product.priceAfterDiscount !== null;
@@ -40,9 +48,13 @@ export default function ProductCard({ product }: { product: Product }) {
         </Link>
 
         <div className="absolute top-3 right-3 flex flex-col space-y-2 z-10">
-          <button className="bg-white h-8 w-8 rounded-full flex items-center justify-center transition shadow-sm text-gray-600 hover:text-red-500 cursor-pointer">
-            <FaRegHeart size={15} />
-          </button>
+            <AddToWishlistBtn
+              id={product._id}
+              className="bg-white h-8 w-8 rounded-full flex items-center justify-center transition shadow-sm text-gray-600 hover:text-red-500 cursor-pointer"
+            >
+              <FaRegHeart size={15} />
+            </AddToWishlistBtn>
+
           <button className="bg-white h-8 w-8 rounded-full flex items-center justify-center text-gray-600 hover:text-primary-600 shadow-sm cursor-pointer">
             <RefreshIcon size={15} />
           </button>
@@ -106,12 +118,13 @@ export default function ProductCard({ product }: { product: Product }) {
             )}
           </div>
 
-          <AddToCartBtn
-            id={product._id}
-            className="cursor-pointer h-10 w-10 rounded-full flex items-center justify-center transition bg-primary-600 text-white hover:bg-primary-700 active:scale-90 shadow-md shadow-primary-600/20"
-          >
-            <HiPlus size={18} />
-          </AddToCartBtn>
+            <AddToCartBtn
+              ProductId={product._id}
+              className="cursor-pointer h-10 w-10 rounded-full flex items-center justify-center transition bg-primary-600 text-white hover:bg-primary-700 active:scale-90 shadow-md shadow-primary-600/20"
+            >
+              <HiPlus size={18} />
+            </AddToCartBtn>
+
         </div>
       </div>
     </div>

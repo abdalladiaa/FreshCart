@@ -1,7 +1,14 @@
-import React from 'react'
 
-export default function wishlist() {
+import Wishlist from "@/components/Wishlist/wishlistPage/wishlist";
+import React from "react";
+
+
+export default function page() {
   return (
-    <div>wishlist</div>
-  )
+    <div className="bg-gray-50 min-h-screen py-10">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <Wishlist/>
+      </div>
+    </div>
+  );
 }

@@ -1,7 +1,10 @@
 "use client";
 import useCart from "@/hooks/useCart/useCart";
+import useWishlist from "@/hooks/useWishlist/useWishlist";
 import { CartResponse } from "@/interfaces/cart.interface";
+import { WishlistResponse } from "@/interfaces/wishlist.interface";
 import { getCart } from "@/services/cart/getCart/getCart";
+import { getWishlist } from "@/services/wishlist/getWishlist/getWishlist";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -186,11 +189,18 @@ export default function Navbar() {
     };
   }, [menu]);
 
-  // ===================CartCount============================
+  // =======================CartCount============================
 
-  const { data: res } = useCart<CartResponse>(getCart, ["cart"]);
+  const { data: cartRes } = useCart<CartResponse>(getCart, ["cart"]);
 
-  const numOfCartItems = res?.numOfCartItems || 0;
+  const numOfCartItems = cartRes?.numOfCartItems || 0;
+
+
+  // =======================WishlistCount============================
+
+    const { data: wishlistRes } = useWishlist<WishlistResponse>(getWishlist, ["wishlist"]);
+
+  const numOfWishlistItems = wishlistRes?.count || 0;
 
   // ====================Search==============================
   const router = useRouter();
@@ -369,12 +379,17 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href={"/wishlist"}
-                  className="relative p-2.5 rounded-full   group text-gray-600 hover:bg-gray-100"
+                  className="relative p-2.5 rounded-full group text-gray-600 hover:bg-gray-100"
                 >
                   <FaRegHeart
-                    className="group-hover:text-primary-600"
+                    className="group-hover:text-red-600"
                     size={"23"}
                   />
+                  {numOfWishlistItems > 0 && (
+                    <span className="absolute top-1 right-1 bg-red-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
+                      {numOfWishlistItems}
+                    </span>
+                  )}
                 </Link>
                 <Link
                   href={"/cart"}
@@ -431,6 +446,7 @@ export default function Navbar() {
                           href: "/profile",
                           label: "My Profile",
                           icon: <HiOutlineUser size={18} />,
+                          
                         },
                         {
                           href: "/allorders",
@@ -604,7 +620,7 @@ export default function Navbar() {
               className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-primary-50 transition-colors"
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center relative">
                   <svg
                     className="w-4 h-4 text-red-500"
                     fill="none"
@@ -618,6 +634,11 @@ export default function Navbar() {
                       d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                     />
                   </svg>
+                  {numOfWishlistItems > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-primary-600 text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
+                      {numOfWishlistItems}
+                    </span>
+                  )}
                 </div>
                 <span className="font-medium text-gray-700">Wishlist</span>
               </div>

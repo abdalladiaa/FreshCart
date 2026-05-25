@@ -9,6 +9,7 @@ import { getSpecificCategory as getSpecificBrand } from "@/services/brands/getSp
 import { getAllProducts } from "@/services/products/getAllProducts/getAllProducts";
 import { FaBoxOpen } from "react-icons/fa";
 import Image from "next/image";
+import { getCart } from "@/services/cart/getCart/getCart";
 
 export default async function Products({
   searchParams,
@@ -39,8 +40,8 @@ export default async function Products({
   const specificCategory = category
     ? await getSpecificCategory(category)
     : categoryFromSub
-    ? await getSpecificCategory(categoryFromSub)
-    : null;
+      ? await getSpecificCategory(categoryFromSub)
+      : null;
 
   const categoryId = specificCategory?.data?._id || categoryFromSub || null;
   const categoryName = specificCategory?.data?.name || null;
@@ -95,6 +96,8 @@ export default async function Products({
   ) : (
     <FaBoxOpen />
   );
+
+
 
   return (
     <>

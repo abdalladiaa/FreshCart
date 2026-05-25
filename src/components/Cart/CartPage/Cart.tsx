@@ -6,7 +6,7 @@ import { deleteUserCart } from "@/services/cart/deleteUserCart/deleteUserCart";
 import { getCart } from "@/services/cart/getCart/getCart";
 import Link from "next/link";
 import { FaShoppingCart } from "react-icons/fa";
-import EmptyCart from "./EmptyCart";
+import EmptyCart from "../../../app/(pages)/cart/EmptyCart";
 import useCart from "@/hooks/useCart/useCart";
 import Loading from "@/app/loading";
 import { CartResponse } from "@/interfaces/cart.interface";
