@@ -9,7 +9,6 @@ import { getSpecificCategory as getSpecificBrand } from "@/services/brands/getSp
 import { getAllProducts } from "@/services/products/getAllProducts/getAllProducts";
 import { FaBoxOpen } from "react-icons/fa";
 import Image from "next/image";
-import { getCart } from "@/services/cart/getCart/getCart";
 
 export default async function Products({
   searchParams,
@@ -59,6 +58,8 @@ export default async function Products({
     apiQueryParams.set("brand", brand);
   }
 
+  apiQueryParams.set("page", "1");
+
   const allProducts = await getAllProducts(apiQueryParams.toString());
 
   const selectedProducts = allProducts.data;
@@ -96,8 +97,6 @@ export default async function Products({
   ) : (
     <FaBoxOpen />
   );
-
-
 
   return (
     <>

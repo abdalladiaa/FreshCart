@@ -7,10 +7,6 @@ import { Toaster } from "sonner";
 import SessionProviderServer from "@/components/SessionProviderServer/SessionProviderServer";
 import TanstackProvider from "@/providers/TanstackProvider/Tanstack.Provider";
 
-
-
-import Chatbot from "@/components/Chatbot/Chatbot";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -46,7 +42,6 @@ export default function RootLayout({
           <Navbar />
           <main>{children}</main>
           <Footer />
-          <Chatbot />
           <Toaster richColors position="top-left" />
           </TanstackProvider>
         </SessionProviderServer>
