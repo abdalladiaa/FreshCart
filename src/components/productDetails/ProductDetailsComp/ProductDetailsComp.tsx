@@ -1,12 +1,11 @@
 import { ProductDetails } from "@/interfaces/productDetails.interface";
-import {
-  FaShippingFast,
-  FaStar,
-} from "react-icons/fa";
+import { FaShippingFast, FaStar } from "react-icons/fa";
 import { FaArrowRotateLeft } from "react-icons/fa6";
 import { RiSecurePaymentLine } from "react-icons/ri";
 import ProductDetailsImages from "./ProductDetailsImages";
 import ProductDetailsProcesses from "../ProductDetailsProcesses/ProductDetailsProcesses";
+import ProductDetailsTabs from "../productDetailsTab/productDetailsTab";
+import RelatedProducts from "../RelatedProducts/RelatedProducts";
 
 export default function ProductDetailsComp({
   product,
@@ -24,11 +23,19 @@ export default function ProductDetailsComp({
       </section>
     );
   }
+
+
+  
+
+
   return (
-    <>
-      <section id="product-detail" className="my-10">
-        <div className="relative container flex flex-col lg:flex-row gap-10 items-start">
+    <section id="product-detail" className="my-10">
+      <div className="container mx-auto px-4">
+
+        <div className="relative flex flex-col lg:flex-row gap-10 items-start">
+
           <ProductDetailsImages product={product} />
+
 
           <div className="lg:w-2/3 w-full space-y-6">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
@@ -77,8 +84,6 @@ export default function ProductDetailsComp({
 
               <ProductDetailsProcesses product={product} />
 
-
-
               {/* Features Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 border-t border-gray-100">
                 <div className="flex items-center gap-3">
@@ -94,6 +99,7 @@ export default function ProductDetailsComp({
                     </p>
                   </div>
                 </div>
+
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center italic">
                     <FaArrowRotateLeft />
@@ -107,6 +113,7 @@ export default function ProductDetailsComp({
                     </p>
                   </div>
                 </div>
+
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center italic">
                     <RiSecurePaymentLine />
@@ -124,7 +131,14 @@ export default function ProductDetailsComp({
             </div>
           </div>
         </div>
-      </section>
-    </>
+
+        <div className="w-full mt-10">
+          <ProductDetailsTabs product = {product.data} />
+        </div>
+        <div className="w-full mt-10">
+          <RelatedProducts productId={product.data._id} productCategory = {product.data.category}/>
+        </div>
+      </div>
+    </section>
   );
 }

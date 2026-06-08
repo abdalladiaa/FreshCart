@@ -1,8 +1,7 @@
 "use server"
 import { getDecodedCookie } from "./getDecodedTokenFunc";
 
-export async function getUserId() {
+export async function getUserRole() {
   const token = await getDecodedCookie();
-  
-  return token?.userId;
+  return token?.role;
 }

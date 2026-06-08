@@ -2,6 +2,8 @@
 
 import z from "zod";
 
+const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,20}$/;
+
 export const signupSchema = z.object({
   name: z
     .string()
@@ -39,6 +41,53 @@ export const signupSchema = z.object({
 });
 
 export type SignupSchemaType = z.infer< typeof signupSchema>
+
+export const resetPasswordSchema = z.object({
+  email: z
+    .string()
+    .email({ message: "Invalid email address" })
+    .nonempty({ message: "Email is required" }),
+
+  newPassword: z
+    .string()
+    .nonempty({ message: "New password is required" })
+    .regex(passwordRegex, {
+      message:
+        "Password must include uppercase, lowercase, number, symbol and be 8-20 characters long",
+    }),
+
+  rePassword: z.string().nonempty({ message: "Please confirm your password" }),
+}).refine((obj) => obj.newPassword === obj.rePassword, {
+  path: ["rePassword"],
+  message: "Passwords do not match",
+});
+
+export type ResetPasswordSchemaType = z.infer<typeof resetPasswordSchema>;
+
+export const changePasswordSchema = z.object({
+  currentPassword: z
+    .string()
+    .nonempty({ message: "Current password is required" })
+    .regex(passwordRegex, {
+      message:
+        "Password must include uppercase, lowercase, number, symbol and be 8-20 characters long",
+    }),
+
+  password: z
+    .string()
+    .nonempty({ message: "New password is required" })
+    .regex(passwordRegex, {
+      message:
+        "Password must include uppercase, lowercase, number, symbol and be 8-20 characters long",
+    }),
+
+  rePassword: z.string().nonempty({ message: "Confirm Password is required" }),
+}).refine((obj) => obj.password === obj.rePassword, {
+  path: ["rePassword"],
+  message: "Passwords do not match",
+});
+
+export type ChangePasswordSchemaType = z.infer<typeof changePasswordSchema>;
 
 export const signinSchema = z.object({
   email: z

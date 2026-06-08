@@ -9,7 +9,7 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+
 import {
   FaAddressBook,
   FaBoxOpen,
@@ -204,19 +204,14 @@ export default function Navbar() {
 
   // ====================Search==============================
   const router = useRouter();
+  const [searchValue, setSearchValue] = useState("");
 
-  const { register, handleSubmit, reset } = useForm({
-    defaultValues: {
-      search: "",
-    },
-  });
-
-  function handleSearch(values: { search: string }) {
-    if (values.search.trim()) {
-      router.push(`/search?q=${encodeURIComponent(values.search.trim())}`);
-      reset();
-    }
-  }
+  // Sync search input with URL search param on mount or pathname change
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q") || "";
+    setSearchValue(q);
+  }, [path]);
 
   return (
     <>
@@ -320,13 +315,19 @@ export default function Navbar() {
                 {logo}
               </Link>
               <form
-                onSubmit={handleSubmit(handleSearch)}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (searchValue.trim()) {
+                    router.push(`/search?q=${encodeURIComponent(searchValue.trim())}`);
+                  }
+                }}
                 className="hidden lg:flex flex-1 max-w-2xl"
               >
                 <div className="relative w-full">
                   <input
-                    {...register("search")}
                     type="text"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
                     className="w-full px-5 py-3 pr-12 rounded-full border border-gray-200 bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-sm"
                     placeholder="Search for products, brands and more..."
                   />
@@ -569,11 +570,19 @@ export default function Navbar() {
           {/* Search Form */}
           <form
             className="p-4 border-b border-gray-100"
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (searchValue.trim()) {
+                router.push(`/search?q=${encodeURIComponent(searchValue.trim())}`);
+                setMenu(false);
+              }
+            }}
           >
             <div className="relative">
               <input
                 type="text"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Search products..."
                 className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-sm"
               />
@@ -581,13 +590,7 @@ export default function Navbar() {
                 type="submit"
                 className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary-600 text-white flex items-center justify-center"
               >
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 512 512"
-                >
-                  <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376C296.3 401.1 253.9 416 208 416 93.1 416 0 322.9 0 208S93.1 0 208 0 416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                </svg>
+                <IoSearch/>
               </button>
             </div>
           </form>

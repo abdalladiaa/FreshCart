@@ -3,19 +3,15 @@ import React, { useState } from "react";
 import { ForgotStep } from "./ForgetPasswordForm";
 import { Eye, EyeOff, Lock, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { resetPasswordFunc } from "@/services/forgetPassword/resetPasswordFunc";
+import { resetPasswordSchema, ResetPasswordSchemaType } from "@/schema/auth.schema";
 import { useRouter } from "next/navigation";
 
 interface ResetPasswordProps {
   setForm: React.Dispatch<React.SetStateAction<ForgotStep>>;
   email: string;
-}
-
-interface ResetPasswordValues {
-  email: string;
-  newPassword: string;
-  rePassword: string;
 }
 
 export default function ResetPassword({ setForm, email }: ResetPasswordProps) {
@@ -27,9 +23,9 @@ export default function ResetPassword({ setForm, email }: ResetPasswordProps) {
   const {
     register,
     handleSubmit,
-    watch, 
     formState: { errors },
-  } = useForm<ResetPasswordValues>({
+  } = useForm<ResetPasswordSchemaType>({
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
       email: email,
       newPassword: "",
@@ -37,9 +33,7 @@ export default function ResetPassword({ setForm, email }: ResetPasswordProps) {
     },
   });
 
-  const password = watch("newPassword");
-
-  async function handleFunction(values: ResetPasswordValues) {
+  async function handleFunction(values: ResetPasswordSchemaType) {
     try {
       setLoading(true);
 
@@ -62,6 +56,7 @@ export default function ResetPassword({ setForm, email }: ResetPasswordProps) {
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit(handleFunction)}>
+      <input type="hidden" {...register("email")} />
       {/* New Password */}
       <div className="space-y-1">
         <label className="block text-sm font-semibold text-gray-700">
@@ -69,13 +64,7 @@ export default function ResetPassword({ setForm, email }: ResetPasswordProps) {
         </label>
         <div className="relative">
           <input
-            {...register("newPassword", {
-              required: "New password is required",
-              minLength: {
-                value: 6,
-                message: "Password must be at least 6 characters",
-              },
-            })}
+            {...register("newPassword")}
             className={`w-full px-4 py-3 pl-12 pr-12 border-2 rounded-xl focus:outline-none transition-all ${
               errors.newPassword
                 ? "border-red-500 focus:ring-red-50"
@@ -111,11 +100,7 @@ export default function ResetPassword({ setForm, email }: ResetPasswordProps) {
         </label>
         <div className="relative">
           <input
-            {...register("rePassword", {
-              required: "Please confirm your password",
-              validate: (value) =>
-                value === password || "Passwords do not match",
-            })}
+            {...register("rePassword")}
             className={`w-full px-4 py-3 pl-12 pr-12 border-2 rounded-xl focus:outline-none transition-all ${
               errors.rePassword
                 ? "border-red-500 focus:ring-red-50"

@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode";
 declare module "next-auth" {
   interface User {
     userToken?: string;
+    role: string
   }
   interface Session {
     user: {
@@ -17,6 +18,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     userToken?: string;
     userId?: string;
+    role?:string
   }
 }
 
@@ -47,12 +49,15 @@ export const nextAuthConfig: NextAuthOptions = {
         
         if (data.message === "success") {
           console.log(data, "user response");
-          const decode = jwtDecode<{ id: string }>(data.token);
+          const decode = jwtDecode<{ id: string , role:string }>(data.token);
+          console.log(decode);
+          
           return {
             id: decode.id,
             email: data.user.email,
             name: data.user.name,
             userToken: data.token,
+            role: decode.role
           };
         } else {
           throw new Error(data.message);
@@ -65,14 +70,12 @@ export const nextAuthConfig: NextAuthOptions = {
       if (user) {
         token.userToken = (user as any).userToken;
         token.userId = user.id;
+        token.role = user.role;
       }
       return token;
     },
     session: ({ session, token }) => {
-      if (session.user) {
-        (session.user as any).userToken = token.userToken;
-        (session.user as any).id = token.userId;
-      }
+
       return session;
     },
   },

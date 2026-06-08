@@ -68,7 +68,6 @@ export default function AddToCartBtn({
   }
 
   if (isInCart) {
-    // 1. حالة صفحة تفاصيل المنتج (Details Page)
     if (isDetailes) {
       return (
         <button
@@ -110,7 +109,6 @@ export default function AddToCartBtn({
       );
     }
 
-    // 3. الحالة الافتراضية الدائرية (Product Card)
     return (
       <button
         onClick={handleDeleteItemFromCart}

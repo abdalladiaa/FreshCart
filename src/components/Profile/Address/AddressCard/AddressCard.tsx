@@ -1,6 +1,8 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { MapPin, Phone, Building2, Pencil, Trash2 } from "lucide-react";
+import { deleteUserAddress } from "@/services/profile/deleteUserAddress/deleteUserAddress";
+import { ImSpinner2 } from "react-icons/im";
 
 interface Address {
   _id: string;
@@ -12,17 +14,27 @@ interface Address {
 
 interface AddressCardProps {
   address: Address;
-  onEdit?: (id: string) => void;
-  onDelete?: (id: string) => void;
-  isDeletePending?: boolean;
 }
 
 export default function AddressCard({
   address,
-  onEdit,
-  onDelete,
-  isDeletePending = false,
 }: AddressCardProps) {
+
+  const [isLoading , setIsLoading] = useState<boolean>(false)
+
+  async function handleDeleteAddress(){
+    try{
+      setIsLoading(true)
+      const data = await deleteUserAddress(address._id)
+    }catch(err){
+      console.log(err);
+      
+    }finally{
+      setIsLoading(false)
+    }
+  }
+
+
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm hover:shadow-md hover:border-primary-100 transition-all duration-200 group">
       <div className="flex items-start justify-between gap-4">
@@ -55,19 +67,11 @@ export default function AddressCard({
         {/* Actions Button Group */}
         <div className="flex items-center gap-2 shrink-0">
           <button
-            onClick={() => onEdit?.(address._id)}
-            className="w-9 h-9 rounded-lg bg-gray-100 text-gray-600 hover:bg-primary-100 hover:text-primary-600 flex items-center justify-center transition-colors cursor-pointer"
-            title="Edit address"
-          >
-            <Pencil size={16} />
-          </button>
-          <button
-            onClick={() => onDelete?.(address._id)}
-            disabled={isDeletePending}
+            onClick={handleDeleteAddress}
             className="w-9 h-9 rounded-lg bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 flex items-center justify-center transition-colors disabled:opacity-50 cursor-pointer"
             title="Delete address"
           >
-            <Trash2 size={16} />
+            {isLoading ? <ImSpinner2 size={16} className="animate-spin" /> : <Trash2 size={16} /> }
           </button>
         </div>
       </div>
