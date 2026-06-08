@@ -191,14 +191,13 @@ export default function Navbar() {
 
   // =======================CartCount============================
 
-  const { data: cartRes } = useCart<CartResponse>(getCart, ["cart"]);
+  const { data: cartRes } = useCart<CartResponse>(getCart, ["cart"], status === "authenticated");
 
   const numOfCartItems = cartRes?.numOfCartItems || 0;
 
-
   // =======================WishlistCount============================
 
-    const { data: wishlistRes } = useWishlist<WishlistResponse>(getWishlist, ["wishlist"]);
+  const { data: wishlistRes } = useWishlist<WishlistResponse>(getWishlist, ["wishlist"], status === "authenticated");
 
   const numOfWishlistItems = wishlistRes?.count || 0;
 
