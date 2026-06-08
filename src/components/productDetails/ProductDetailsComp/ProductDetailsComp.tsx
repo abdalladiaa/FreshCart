@@ -7,7 +7,7 @@ import ProductDetailsProcesses from "../ProductDetailsProcesses/ProductDetailsPr
 import ProductDetailsTabs from "../productDetailsTab/productDetailsTab";
 import RelatedProducts from "../RelatedProducts/RelatedProducts";
 
-export default function ProductDetailsComp({
+export default async function ProductDetailsComp({
   product,
 }: {
   product: ProductDetails;
