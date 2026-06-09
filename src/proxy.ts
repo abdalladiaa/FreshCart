@@ -7,7 +7,7 @@ export async function proxy(req: NextRequest) {
       ? "__Secure-next-auth.session-token"
       : "next-auth.session-token";
   const token = await getToken({ req, secret: process.env.AUTH_SECRET , cookieName });
-  if (req.nextUrl.pathname.includes("/cart") || req.nextUrl.pathname.includes("/checkout")) {
+  if (req.nextUrl.pathname.includes("/cart") || req.nextUrl.pathname.includes("/checkout") || req.nextUrl.pathname.includes("/profile") || req.nextUrl.pathname.includes("/allorders")) {
     if (!token) {
       return NextResponse.redirect(new URL("/signin", req.url));
     } else {
@@ -27,5 +27,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/cart", "/signin", "/signup" , '/checkout'],
+  matcher: ["/cart", "/signin", "/signup", "/checkout", "/profile", "/allorders"],
 };

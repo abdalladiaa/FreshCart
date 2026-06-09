@@ -54,9 +54,9 @@ export default function Signup() {
         });
         if (signInResponse?.error) {
           console.error(signInResponse.error);
-          router.push("/signin")
+          router.push("/signin");
         } else {
-          router.push("/");
+          window.location.replace("/");
         }
       } else {
         toast.error(data.message);

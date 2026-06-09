@@ -45,8 +45,7 @@ export default function Signin() {
 
       if (data?.ok) {
         toast.success("Signin Successfully");
-        
-        router.push("/");
+        window.location.replace("/");
       } else {
         toast.error(data?.error);
       }
