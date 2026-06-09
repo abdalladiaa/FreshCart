@@ -20,7 +20,7 @@ import {
 import signinImage from "../../../../public/assets/2e5810ff3e-e750761ebcd4ae5907db.png";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 import { toast } from "sonner";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 
 export default function Signin() {
   const router = useRouter();
@@ -45,7 +45,10 @@ export default function Signin() {
 
       if (data?.ok) {
         toast.success("Signin Successfully");
-        window.location.replace("/");
+        // ensure client session is updated and server components revalidate without a full reload
+        await getSession();
+        router.refresh();
+        router.push("/");
       } else {
         toast.error(data?.error);
       }

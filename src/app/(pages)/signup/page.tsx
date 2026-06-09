@@ -12,7 +12,7 @@ import { signupSchema, SignupSchemaType } from "@/schema/auth.schema";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 
 export default function Signup() {
   const router = useRouter();
@@ -56,7 +56,10 @@ export default function Signup() {
           console.error(signInResponse.error);
           router.push("/signin");
         } else {
-          window.location.replace("/");
+          // update client session and revalidate server components without forcing a full page reload
+          await getSession();
+          router.refresh();
+          router.push("/");
         }
       } else {
         toast.error(data.message);
