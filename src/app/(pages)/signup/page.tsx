@@ -56,7 +56,6 @@ export default function Signup() {
           console.error(signInResponse.error);
           router.push("/signin");
         } else {
-          // update client session and revalidate server components without forcing a full page reload
           await getSession();
           router.refresh();
           router.push("/");
